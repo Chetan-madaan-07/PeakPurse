@@ -1,0 +1,118 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (Development)
+  postgres:
+    image: postgres:15-alpine
+    container_name: peakpurse-postgres-dev
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-peakpurse_dev}
+      POSTGRES_USER: ${DB_USERNAME:-peakpurse_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ../database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - peakpurse-dev-network
+
+  # Redis Cache (Development)
+  redis:
+    image: redis:7-alpine
+    container_name: peakpurse-redis-dev
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - peakpurse-dev-network
+
+  # Backend API (Development)
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.dev
+    container_name: peakpurse-backend-dev
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=${DB_USERNAME:-peakpurse_user}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - DB_DATABASE=${DB_DATABASE:-peakpurse_dev}
+      - DB_SYNCHRONIZE=true
+      - DB_LOGGING=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - ML_SERVICE_URL=http://ml-service:8000
+      - LOG_LEVEL=debug
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+      - uploads_dev:/app/uploads
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - peakpurse-dev-network
+    command: npm run start:dev
+
+  # ML Service (Development)
+  ml-service:
+    build:
+      context: ../ml-service
+      dockerfile: Dockerfile.dev
+    container_name: peakpurse-ml-service-dev
+    environment:
+      - DEBUG=true
+      - DATABASE_URL=postgresql://${DB_USERNAME:-peakpurse_user}:${DB_PASSWORD:-password}@postgres:5432/${DB_DATABASE:-peakpurse_dev}
+      - INTERNAL_SECRET=${INTERNAL_SECRET}
+      - LOG_LEVEL=debug
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../ml-service:/app
+      - /app/__pycache__
+    depends_on:
+      - postgres
+    networks:
+      - peakpurse-dev-network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+
+  # Frontend (Development)
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    container_name: peakpurse-frontend-dev
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - NEXT_PUBLIC_WS_URL=ws://localhost:3000
+      - NEXT_PUBLIC_APP_VERSION=${APP_VERSION:-1.0.0}
+      - NEXT_PUBLIC_DEV_MODE=true
+    ports:
+      - "3001:3001"
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    networks:
+      - peakpurse-dev-network
+    command: npm run dev
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+  uploads_dev:
+
+networks:
+  peakpurse-dev-network:
+    driver: bridge
