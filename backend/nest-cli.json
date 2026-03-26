@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "tsconfig.json"
+  },
+  "projects": {
+    "auth": {
+      "type": "library",
+      "root": "src/auth",
+      "entryFile": "auth.module",
+      "sourceRoot": "src/auth"
+    },
+    "finance": {
+      "type": "library",
+      "root": "src/finance",
+      "entryFile": "finance.module",
+      "sourceRoot": "src/finance"
+    },
+    "tax": {
+      "type": "library",
+      "root": "src/tax",
+      "entryFile": "tax.module",
+      "sourceRoot": "src/tax"
+    },
+    "ca": {
+      "type": "library",
+      "root": "src/ca",
+      "entryFile": "ca.module",
+      "sourceRoot": "src/ca"
+    },
+    "benchmarking": {
+      "type": "library",
+      "root": "src/benchmarking",
+      "entryFile": "benchmarking.module",
+      "sourceRoot": "src/benchmarking"
+    },
+    "chatbot": {
+      "type": "library",
+      "root": "src/chatbot",
+      "entryFile": "chatbot.module",
+      "sourceRoot": "src/chatbot"
+    },
+    "investment": {
+      "type": "library",
+      "root": "src/investment",
+      "entryFile": "investment.module",
+      "sourceRoot": "src/investment"
+    },
+    "notification": {
+      "type": "library",
+      "root": "src/notification",
+      "entryFile": "notification.module",
+      "sourceRoot": "src/notification"
+    },
+    "audit": {
+      "type": "library",
+      "root": "src/audit",
+      "entryFile": "audit.module",
+      "sourceRoot": "src/audit"
+    }
+  }
+}
