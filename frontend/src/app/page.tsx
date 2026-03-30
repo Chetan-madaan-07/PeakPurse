@@ -4,13 +4,23 @@ import { useState } from "react";
 import FileUpload from "../components/FileUpload";
 import TransactionTable from "../components/TransactionTable";
 import AnalyticsChart from "../components/AnalyticsChart";
+import dynamic from 'next/dynamic';
+
+// This tells Next.js: "Don't load this on the server, only load it in the browser!"
+const StatementViewer = dynamic(() => import("../components/StatementViewer"), {
+  ssr: false,
+  loading: () => <p className="text-gray-500">Initializing PDF Engine...</p>
+});
 
 export default function Home() {
   const [transactions, setTransactions] = useState([]);
+  const [uploadedPdf, setUploadedPdf] = useState<File | null>(null);
 
-  const handleDataReceived = (data: any) => {
+  // Catch both the data AND the file
+  const handleDataReceived = (data: any, file: File) => {
     console.log("Data mapped to table and charts:", data);
     setTransactions(data);
+    setUploadedPdf(file);
   };
 
   return (
@@ -25,18 +35,26 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Step 4.1: The Dropzone */}
+        {/* The Dropzone */}
         {transactions.length === 0 && (
           <FileUpload onDataReceived={handleDataReceived} />
         )}
 
-        {/* Show Analytics and Table ONLY when we have data */}
+        {/* The Dashboard */}
         {transactions.length > 0 && (
           <div className="space-y-8">
-            {/* Step 4.3: GenZ Analytics */}
-            <AnalyticsChart transactions={transactions} />
             
-            {/* Step 4.2: Data Visualization */}
+            {/* Split Screen: PDF on the Left, Analytics on the Right */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-1">
+                <StatementViewer file={uploadedPdf} />
+              </div>
+              <div className="lg:col-span-2">
+                <AnalyticsChart transactions={transactions} />
+              </div>
+            </div>
+            
+            {/* The Table below them */}
             <TransactionTable transactions={transactions} />
           </div>
         )}

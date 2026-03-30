@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
 
 interface FileUploadProps {
-  onDataReceived: (data: any) => void;
+  onDataReceived: (data: any, uploadedFile: File) => void;
 }
 
 export default function FileUpload({ onDataReceived }: FileUploadProps) {
@@ -51,7 +51,7 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
       setIsUploading(false);
       
       // Pass the actual parsed JSON data back to your main page
-      onDataReceived(response.data);
+      onDataReceived(response.data, file);
 
     } catch (error) {
       console.error("Upload failed completely. Is the backend running?", error);
@@ -66,7 +66,7 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
         { id: '4', date: '2026-03-29', description: 'Netflix Subscription', amount: 649, category: 'Entertainment' },
         { id: '5', date: '2026-03-30', description: 'Swiggy Instamart', amount: 800, category: 'Food' }
       ];
-      onDataReceived(dummyData);
+      onDataReceived(dummyData, file);
 
     }
   };
