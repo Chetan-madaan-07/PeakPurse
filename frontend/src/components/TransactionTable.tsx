@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-// Defining the shape of our JSON data
 interface Transaction {
   id: string;
   date: string;
@@ -17,37 +16,36 @@ interface TableProps {
 
 export default function TransactionTable({ transactions }: TableProps) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-8 animate-fade-in-up">
-      <div className="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-        <h3 className="text-lg font-bold text-gray-800">Extracted Transactions</h3>
-        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">
-          {transactions.length} Records Found
+    <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden mt-8 transition-all hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)]">
+      <div className="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center">
+        <h3 className="text-xl font-bold text-gray-800">Extracted Transactions</h3>
+        <span className="bg-gradient-to-r from-emerald-100 to-teal-100 text-teal-800 shadow-sm px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          {transactions.length} Records
         </span>
       </div>
       
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse whitespace-nowrap">
           <thead>
-            <tr className="bg-white text-gray-500 text-sm border-b border-gray-100">
-              <th className="p-4 font-medium">Date</th>
-              <th className="p-4 font-medium">Merchant / Description</th>
-              <th className="p-4 font-medium">Category</th>
-              <th className="p-4 font-medium text-right">Amount (₹)</th>
+            <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100">
+              <th className="px-6 py-4 font-semibold">Date</th>
+              <th className="px-6 py-4 font-semibold">Merchant / Description</th>
+              <th className="px-6 py-4 font-semibold">Category</th>
+              <th className="px-6 py-4 font-semibold text-right">Amount (₹)</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
-            {/* Step 4.2: Mapping the data into a clean table */}
+          <tbody className="divide-y divide-gray-50">
             {transactions.map((t, index) => (
-              <tr key={index} className="hover:bg-gray-50 transition-colors">
-                <td className="p-4 text-gray-600 text-sm">{t.date}</td>
-                <td className="p-4 font-medium text-gray-800">{t.description}</td>
-                <td className="p-4">
-                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-600">
+              <tr key={t.id || index} className="hover:bg-indigo-50/50 transition-colors duration-200">
+                <td className="px-6 py-4 text-gray-500 text-sm font-medium">{t.date}</td>
+                <td className="px-6 py-4 font-bold text-gray-800">{t.description}</td>
+                <td className="px-6 py-4">
+                  <span className="px-3 py-1 text-xs font-bold rounded-full bg-indigo-100 text-indigo-700 uppercase tracking-wide">
                     {t.category}
                   </span>
                 </td>
-                <td className="p-4 font-bold text-gray-900 text-right">
-                  {t.amount.toLocaleString('en-IN')}
+                <td className="px-6 py-4 font-extrabold text-gray-900 text-right text-base">
+                  {t.amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }).replace('₹', '')}
                 </td>
               </tr>
             ))}

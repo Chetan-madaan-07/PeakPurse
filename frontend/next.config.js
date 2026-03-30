@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
   output: 'standalone', // Fix: Required for your Docker multi-stage build
   images: {
     domains: ['localhost', 'api.peakpurse.com'],
@@ -12,6 +12,9 @@ const nextConfig = {
     NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3000',
     NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
   },
+  experimental: {
+    serverComponentsExternalPackages: ['pdfjs-dist', 'react-pdf'],
+  },
   async rewrites() {
     return [
       {
@@ -19,6 +22,11 @@ const nextConfig = {
         destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/:path*`,
       },
     ];
+  },
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    config.resolve.alias.encoding = false;
+    return config;
   },
   // async redirects() {
   //   return [
