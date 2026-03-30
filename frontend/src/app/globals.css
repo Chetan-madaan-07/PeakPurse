@@ -1,0 +1,32 @@
+/* Tailwind Directives - These bring all the magic classes into your project */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional: We can add a base layer to make sure the whole app looks clean by default */
+@layer base {
+  html,
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* You can also add custom animations here if you want that GenZ feel */
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
