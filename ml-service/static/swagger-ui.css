@@ -1,0 +1,4 @@
+/* Swagger UI CSS for PeakPurse ML Service */
+.swagger-ui .topbar { display: none; }
+.swagger-ui .info { margin: 20px 0; }
+.swagger-ui .scheme-container { margin: 20px 0; }
