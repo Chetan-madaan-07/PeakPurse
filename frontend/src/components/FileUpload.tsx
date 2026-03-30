@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useState } from 'react';
+import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
 
 interface FileUploadProps {
@@ -29,7 +30,6 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
     
     setIsUploading(true);
     
-    // We are preparing the data to send to your Express backend
     const formData = new FormData();
     formData.append('statement', file);
     if (password) {
@@ -37,18 +37,25 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
     }
 
     try {
-      // NOTE: We will connect this to your Express backend in the next step!
-      console.log("Uploading file...", file.name);
-      console.log("Password entered:", password);
+      console.log("Sending file to backend...");
       
-      // Simulate a successful API call for now
-      setTimeout(() => {
-        setIsUploading(false);
-        alert("File ready to be sent to backend!");
-      }, 1000);
+      // Make the real API call to your backend server (we will build this next!)
+      // Assuming your backend will run on port 5000
+      const response = await axios.post('http://localhost:5000/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log("Success! Backend says:", response.data);
+      setIsUploading(false);
+      
+      // Pass the actual parsed JSON data back to your main page
+      onDataReceived(response.data);
 
     } catch (error) {
-      console.error("Upload failed", error);
+      console.error("Upload failed completely. Is the backend running?", error);
+      alert("Oops! Could not connect to the backend server.");
       setIsUploading(false);
     }
   };
