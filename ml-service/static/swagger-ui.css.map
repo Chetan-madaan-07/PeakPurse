@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "swagger-ui.css",
+  "sourceRoot": "",
+  "sources": [
+    "node_modules/swagger-ui/dist/swagger-ui.css"
+  ],
+  "names": [],
+  "mappings": ""
+}
