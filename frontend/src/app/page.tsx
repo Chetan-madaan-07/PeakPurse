@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import FileUpload from "../components/FileUpload";
+import Dashboard from "../components/Dashboard";
 
 export default function Home() {
-  // We will store the parsed transactions here later
   const [transactions, setTransactions] = useState([]);
 
   const handleDataReceived = (data: any) => {
@@ -24,14 +24,11 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Show the uploader if we don't have transactions yet */}
+        {/* Magic Switch: If no data, show uploader. If data exists, show dashboard! */}
         {transactions.length === 0 ? (
           <FileUpload onDataReceived={handleDataReceived} />
         ) : (
-          <div className="text-center p-10">
-            <h2 className="text-2xl font-bold text-green-600">Data Parsed Successfully!</h2>
-            <p className="text-gray-600 mt-2">Table and Charts coming up next...</p>
-          </div>
+          <Dashboard transactions={transactions} />
         )}
       </div>
     </main>

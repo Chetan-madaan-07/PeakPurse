@@ -57,6 +57,17 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
       console.error("Upload failed completely. Is the backend running?", error);
       alert("Oops! Could not connect to the backend server.");
       setIsUploading(false);
+
+      // Inject dummy data to see the Dashboard
+      const dummyData = [
+        { id: '1', date: '2026-03-25', description: 'Zomato Food Delivery', amount: 450, category: 'Food' },
+        { id: '2', date: '2026-03-26', description: 'Amazon Shopping', amount: 1200, category: 'Shopping' },
+        { id: '3', date: '2026-03-28', description: 'Uber Rides', amount: 300, category: 'Transport' },
+        { id: '4', date: '2026-03-29', description: 'Netflix Subscription', amount: 649, category: 'Entertainment' },
+        { id: '5', date: '2026-03-30', description: 'Swiggy Instamart', amount: 800, category: 'Food' }
+      ];
+      onDataReceived(dummyData);
+
     }
   };
 
