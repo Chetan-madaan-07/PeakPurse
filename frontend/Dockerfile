@@ -3,20 +3,20 @@ FROM node:18-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
+# Fix: libc6-compat is often needed for shared libraries in Alpine
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production && npm cache clean --force
+# Fix: Remove --only=production because devDeps are needed for the build (like Tailwind/TS)
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build the application
 RUN npm run build
 
 # Production image, copy all the files and run next
@@ -24,12 +24,17 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+# Fix: Ensure the app listens on the port you exposed
+ENV PORT=3001
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy built application
+# Fix: Install curl because alpine-base does not have it by default
+RUN apk add --no-cache curl
+
+# Copy built application (Standalone mode)
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
