@@ -15,8 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {/* We are adding the ThemeSwitcher here so it stays on top */}
+        {/* Change defaultTheme from "system" to "dark" */}
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="absolute top-4 right-4 z-50">
             <ThemeSwitcher />
           </div>
