@@ -7,7 +7,7 @@
 @layer base {
   html,
   body {
-    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    @apply font-sans antialiased;
     margin: 0;
     padding: 0;
   }

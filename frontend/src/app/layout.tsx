@@ -1,4 +1,6 @@
 import './globals.css';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 export const metadata = {
   title: 'PeakPurse AI',
@@ -11,8 +13,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className="bg-gray-50">{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className="bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {/* We are adding the ThemeSwitcher here so it stays on top */}
+          <div className="absolute top-4 right-4 z-50">
+            <ThemeSwitcher />
+          </div>
+          
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
