@@ -112,6 +112,14 @@ ENV/
 env.bak/
 venv.bak/
 
+# Test and development files (keep useful ones)
+test_step*.py
+startup_test.py
+simple_test.py
+*_test.py
+!quick_test.py
+!test_service.py
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -151,3 +159,10 @@ test-results.xml
 
 # Local development
 .local
+
+# Documentation files that shouldn't be in repo
+BUG_FIX_SUMMARY.md
+DOCS_FIX_SUMMARY.md
+STEP_*_SUMMARY.md
+
+Hackathon Development Order of Operations.md
