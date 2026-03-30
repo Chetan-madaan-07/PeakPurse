@@ -6,10 +6,8 @@ import TransactionTable from "../components/TransactionTable";
 import AnalyticsChart from "../components/AnalyticsChart";
 import dynamic from 'next/dynamic';
 
-// This tells Next.js: "Don't load this on the server, only load it in the browser!"
-const StatementViewer = dynamic(() => import("../components/StatementViewer"), {
+const StatementViewer = dynamic(() => import('../components/StatementViewer'), {
   ssr: false,
-  loading: () => <p className="text-gray-500">Initializing PDF Engine...</p>
 });
 
 export default function Home() {
