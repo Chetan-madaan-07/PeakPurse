@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: false,
   output: 'standalone', // Fix: Required for your Docker multi-stage build
   images: {
-    domains: ['localhost', 'api.peakpurse.com'],
+    remotePatterns: [
+      { protocol: 'http', hostname: 'localhost' },
+      { protocol: 'https', hostname: 'api.peakpurse.com' },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
   env: {
@@ -22,11 +24,6 @@ const nextConfig = {
         destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/:path*`,
       },
     ];
-  },
-  webpack: (config) => {
-    config.resolve.alias.canvas = false;
-    config.resolve.alias.encoding = false;
-    return config;
   },
   // async redirects() {
   //   return [
