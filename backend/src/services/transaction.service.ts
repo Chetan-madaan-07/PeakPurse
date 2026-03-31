@@ -101,6 +101,49 @@ export class TransactionService {
   }
 
   /**
+   * Requirement 8: Subscription Intelligence Scanner
+   * Identifies recurring patterns (at least 2 occurrences) within a ±5% variance.
+   */
+  async scanForSubscriptionLeakage(): Promise<Array<{ merchant: string; amount: number; frequency: string }>> {
+    const transactions = await this.transactionRepository.find({
+      order: { merchant_name: 'ASC', date: 'ASC' }
+    });
+
+    // Grouping by merchant name 
+    const grouped = transactions.reduce((acc, tx) => {
+      const name = tx.merchant_name || 'Unknown';
+      acc[name] = acc[name] || [];
+      acc[name].push(tx);
+      return acc;
+    }, {});
+
+    const subscriptions = [];
+
+    for (const merchant in grouped) {
+      const txs = grouped[merchant];
+      if (txs.length < 2) continue; // Must have at least 2 consecutive occurrences 
+
+      for (let i = 0; i < txs.length - 1; i++) {
+        const amt1 = Math.abs(Number(txs[i].amount));
+        const amt2 = Math.abs(Number(txs[i + 1].amount));
+        
+        // Detection Logic: ±5% variance check 
+        const variance = Math.abs(amt1 - amt2) / amt1;
+        
+        if (variance <= 0.05) {
+          subscriptions.push({
+            merchant,
+            amount: amt1,
+            frequency: 'monthly' // Rule-based detection 
+          });
+          break;
+        }
+      }
+    }
+    return subscriptions;
+  }
+
+  /**
    * Get all transactions for a user (with pagination)
    */
   async getTransactions(page: number = 1, limit: number = 50): Promise<{ transactions: Transaction[]; total: number; page: number; totalPages: number }> {
@@ -192,7 +235,6 @@ export class TransactionService {
     return this.transactionRepository.findOne({ where: { hash } });
   }
 
-
   /**
    * Get transaction statistics
    */
@@ -218,6 +260,51 @@ export class TransactionService {
       totalIncome: parseFloat(stats.totalIncome) || 0,
       averageTransaction: parseFloat(stats.averageTransaction) || 0,
       categoriesCount: parseInt(stats.categoriesCount) || 0,
+    };
+  }
+
+  /**
+   * Phase 3: Calculate average monthly surplus (Income - Expenses)
+   * Strictly handles the zero-transaction edge case for the Investment Advisory System.
+   */
+  async calculateMonthlySurplus(): Promise<{ surplus: number; hasHistory: boolean }> {
+    // 1. Check if we have ANY transaction data at all 
+    const count = await this.transactionRepository.count();
+    
+    // THE ZERO-TRANSACTION EDGE CASE FALLBACK 
+    if (count === 0) {
+      this.logger.warn('Zero transaction history detected. Triggering manual surplus fallback.');
+      return { 
+        surplus: 0, 
+        hasHistory: false // This flag tells the Investment Engine to ask for manual input! 
+      };
+    }
+
+    // 2. If we DO have transactions, calculate the real average monthly surplus 
+    const stats = await this.getTransactionStats();
+    
+    // Find out how many months of data we actually have
+    const dates = await this.transactionRepository.query(`
+      SELECT MIN(date) as start_date, MAX(date) as end_date FROM transactions
+    `);
+    
+    let monthsOfData = 1;
+    if (dates[0]?.start_date && dates[0]?.end_date) {
+      const start = new Date(dates[0].start_date);
+      const end = new Date(dates[0].end_date);
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      monthsOfData = Math.max(1, diffDays / 30); // Minimum 1 month to prevent dividing by zero 
+    }
+
+    // Surplus = Average Monthly Income - Average Monthly Expenses 
+    const avgMonthlyIncome = stats.totalIncome / monthsOfData;
+    const avgMonthlyExpense = stats.totalSpent / monthsOfData;
+    const surplus = avgMonthlyIncome - avgMonthlyExpense;
+
+    return {
+      surplus: Math.round(surplus * 100) / 100, // Round to 2 decimal places 
+      hasHistory: true
     };
   }
 }
