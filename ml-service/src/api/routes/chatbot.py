@@ -1,73 +1,73 @@
 """
-Chatbot API routes using Gemini 1.5 Flash
+Chatbot API routes using Gemini 1.5 Flash (google.genai SDK)
 """
 
 from fastapi import APIRouter, Request, HTTPException
 from pydantic import BaseModel
-from google.api_core import exceptions
+from google.genai import types
 import structlog
 import asyncio
 
 logger = structlog.get_logger()
 router = APIRouter()
 
-# 1. Define the expected request body
+
 class ChatRequest(BaseModel):
     message: str
-    # Note: You can add user_id or session_id here later when you want to store chat history
+    session_id: str | None = None
 
-# 2. The main Chat endpoint
-@router.post("/chat", summary="Send a message to the Gemini Chatbot")
+
+@router.post("/chat", summary="Send a message to PeakBot")
 async def process_chat(request: Request, payload: ChatRequest) -> dict:
     """
     Process a user message through Gemini 1.5 Flash with exponential backoff.
     """
-    # Verify the model is loaded (safety check)
-    if not hasattr(request.app.state, "gemini_model"):
-        logger.error("Gemini model not found in app state.")
+    if not hasattr(request.app.state, "gemini_client"):
+        logger.error("Gemini client not found in app state.")
         raise HTTPException(status_code=503, detail="Chatbot service is currently offline.")
 
-    model = request.app.state.gemini_model
-    
-    # "Crash-proof" loop parameters
+    client = request.app.state.gemini_client
+    model_name = request.app.state.gemini_model
+
     wait_time = 2
     max_retries = 3
-    
+
     for attempt in range(max_retries):
         try:
-            logger.info("Sending message to Gemini", attempt=attempt+1)
-            
-            # Optional: Give the bot a personality or context
-            system_prompt = "You are a helpful and professional financial assistant for the PeakPurse app."
-            full_prompt = f"{system_prompt}\n\nUser: {payload.message}\nAssistant:"
-            
-            # Execute the call
-            response = model.generate_content(full_prompt)
-            
-            return {
-                "success": True,
-                "reply": response.text
-            }
-            
-        except exceptions.ResourceExhausted:
-            # Error 429: Rate Limit Hit
-            logger.warning("Gemini Rate Limit Hit. Waiting...", wait_time=wait_time)
-            await asyncio.sleep(wait_time)
-            wait_time *= 2  # Double the wait time for the next loop
-            
-        except Exception as e:
-            # Catch-all for other API errors (500s, authentication failures, etc.)
-            logger.error("Gemini critical error", error=str(e))
-            raise HTTPException(status_code=500, detail="Chatbot encountered an unexpected error.")
-            
-    # If the loop finishes without returning, we hit the limit 3 times
-    logger.error("Max retries reached for Gemini API")
-    raise HTTPException(status_code=429, detail="AI Service is currently overloaded. Please try again later.")
+            logger.info("Sending message to Gemini", attempt=attempt + 1)
 
-# 3. Simple health check endpoint for your monitoring
+            response = client.models.generate_content(
+                model=model_name,
+                contents=payload.message,
+                config=types.GenerateContentConfig(
+                    system_instruction=(
+                        "You are PeakBot, a helpful and professional financial assistant "
+                        "for Indian users on the PeakPurse app. Always respond concisely."
+                    ),
+                    temperature=0.7,
+                    max_output_tokens=1024,
+                ),
+            )
+
+            return {"success": True, "reply": response.text}
+
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                logger.warning("Gemini rate limit hit. Waiting...", wait_time=wait_time)
+                await asyncio.sleep(wait_time)
+                wait_time *= 2
+            else:
+                logger.error("Gemini critical error", error=err_str)
+                raise HTTPException(status_code=500, detail="Chatbot encountered an unexpected error.")
+
+    logger.error("Max retries reached for Gemini API")
+    raise HTTPException(status_code=429, detail="AI Service is overloaded. Please try again later.")
+
+
 @router.get("/chat/health", summary="Health check for chatbot")
 async def chatbot_health(request: Request) -> dict:
     return {
         "status": "healthy",
-        "gemini_ready": hasattr(request.app.state, "gemini_model")
+        "gemini_ready": hasattr(request.app.state, "gemini_client"),
     }

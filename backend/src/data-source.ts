@@ -1,6 +1,8 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Transaction } from './transaction.entity';
+import { ChatSession } from './chatbot/chat-session.entity';
+import { User } from './auth/user.entity';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -12,7 +14,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || 'peakpurse_user',
   password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_DATABASE || 'peakpurse_dev',
-  entities: [Transaction],
+  entities: [Transaction, ChatSession, User],
   migrations: ['src/migrations/*.ts'],
   synchronize: false,
   logging: process.env.DB_LOGGING === 'true',

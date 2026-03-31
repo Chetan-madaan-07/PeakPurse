@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 // Controllers
 import { AppController } from './app.controller';
@@ -13,41 +14,62 @@ import { InvestmentController } from './controllers/investment.controller';
 import { FileUploadService } from './services/file-upload.service';
 import { TransactionService } from './services/transaction.service';
 import { InvestmentService } from './services/investment.service';
-import { AuditService } from './services/audit.service'; // NEW
+import { AuditService } from './services/audit.service';
 
-// Entities
+// Entities — root level
 import { Transaction } from './transaction.entity';
 import { User } from './user.entity';
 import { Goal } from './goal.entity';
 import { InvestmentPlan } from './investment-plan.entity';
-import { AuditLog } from './audit-log.entity'; // NEW
+import { AuditLog } from './audit-log.entity';
+
+// Entities — module level
+import { ChatSession } from './chatbot/chat-session.entity';
+import { Subscription } from './subscription/subscription.entity';
+import { Notification } from './subscription/notification.entity';
+
+import { TaxModule } from './tax/tax.module';
+import { TaxProfile } from './tax/tax.entity';
+import { AuthModule } from './auth/auth.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
+import { CaModule } from './ca/ca.module';
+import { BenchmarkingModule } from './benchmarking/benchmarking.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env'],
-    }), 
-    
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),
+    ScheduleModule.forRoot(),
+
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',
-        url: process.env.DATABASE_URL,
-        // Register AuditLog entity here
-        entities: [Transaction, User, Goal, InvestmentPlan, AuditLog], 
-        synchronize: true,
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT) || 5432,
+        username: process.env.DB_USERNAME || 'peakpurse_user',
+        password: process.env.DB_PASSWORD || 'password',
+        database: process.env.DB_DATABASE || 'peakpurse_dev',
+        entities: [
+          Transaction, User, Goal, InvestmentPlan, AuditLog,
+          ChatSession, Subscription, Notification, TaxProfile,
+        ],
+        synchronize: process.env.DB_SYNCHRONIZE === 'true',
         logging: process.env.DB_LOGGING === 'true',
-        ssl: {
-          rejectUnauthorized: false,
-        },
+        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
         connectTimeoutMS: 30000,
         retryAttempts: 5,
         retryDelay: 3000,
       }),
     }),
 
-    // Register AuditLog for injection into services
     TypeOrmModule.forFeature([Transaction, User, Goal, InvestmentPlan, AuditLog]),
+
+    AuthModule,
+    ChatbotModule,
+    CaModule,
+    BenchmarkingModule,
+    SubscriptionModule,
+    TaxModule,
   ],
   controllers: [
     AppController,
@@ -60,7 +82,7 @@ import { AuditLog } from './audit-log.entity'; // NEW
     FileUploadService,
     TransactionService,
     InvestmentService,
-    AuditService, // Added AuditService to providers
+    AuditService,
   ],
 })
 export class AppModule {}

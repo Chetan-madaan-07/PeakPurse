@@ -109,6 +109,11 @@ class Settings(BaseSettings):
     INTERNAL_SECRET: str = "dev-secret-change-in-production"
 
     # -------------------------------
+    # 🤖 Gemini AI
+    # -------------------------------
+    GEMINI_API_KEY: str = ""
+
+    # -------------------------------
     # 🤖 ML Config (NEW + existing)
     # -------------------------------
     LAYOUTLM_MODEL_NAME: str = "microsoft/layoutlm-base-uncased"

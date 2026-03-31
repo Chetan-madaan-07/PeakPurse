@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 import structlog
 import uvicorn
 import os
-import google.generativeai as genai
+import google.genai as genai
 
 # Added chatbot to your imports
 from src.api.routes import health_score, recommendations, categorizer, chatbot
@@ -97,15 +97,9 @@ async def startup_event():
         # NEW: Initialize Gemini for the Chatbot
         api_key = os.getenv("GEMINI_API_KEY") or getattr(settings, 'GEMINI_API_KEY', None)
         if api_key:
-            genai.configure(api_key=api_key)
-            app.state.gemini_model = genai.GenerativeModel(
-                model_name='gemini-1.5-flash',
-                generation_config={
-                    "temperature": 0.7, # 0.7 gives a good balance of accuracy and conversational flow
-                    "top_p": 0.95,
-                    "max_output_tokens": 8192,
-                }
-            )
+            client = genai.Client(api_key=api_key)
+            app.state.gemini_client = client
+            app.state.gemini_model = "gemini-1.5-flash"
             logger.info("Gemini 1.5 Flash initialized successfully for Chatbot")
         else:
             logger.warning("GEMINI_API_KEY not found! Chatbot will not function until key is provided.")

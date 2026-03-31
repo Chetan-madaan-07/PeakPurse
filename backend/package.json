@@ -26,6 +26,8 @@
     "seed": "ts-node -r tsconfig-paths/register src/database/seeds/run-seeds.ts"
   },
   "dependencies": {
+    "@google/genai": "^1.47.0",
+    "@google/generative-ai": "^0.24.1",
     "@nestjs/bull": "^10.0.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
@@ -33,6 +35,7 @@
     "@nestjs/jwt": "^10.1.1",
     "@nestjs/passport": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/schedule": "^6.1.1",
     "@nestjs/swagger": "^7.1.14",
     "@nestjs/terminus": "^10.1.1",
     "@nestjs/throttler": "^5.0.0",
