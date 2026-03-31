@@ -37,7 +37,7 @@ export default function StatementViewer({ file, transactions = [] }: StatementVi
 
   if (!file || !isReady) {
     return (
-      <div className="p-10 text-center bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] h-full min-h-[400px] flex items-center justify-center">
+      <div className="p-10 text-center bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] h-full min-h-[400px] flex items-center justify-center">
         <div className="flex flex-col items-center">
           <svg className="animate-spin h-10 w-10 text-indigo-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -50,10 +50,10 @@ export default function StatementViewer({ file, transactions = [] }: StatementVi
   }
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-gray-100 h-full flex flex-col">
-      <h3 className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-4 text-center">AI Document Preview</h3>
+    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-gray-100 dark:border-slate-800 h-full flex flex-col">
+      <h3 className="text-sm font-bold tracking-widest text-gray-400 dark:text-gray-500 uppercase mb-4 text-center">AI Document Preview</h3>
       
-      <div className="flex-1 min-h-[400px] border border-gray-200 rounded-xl overflow-y-auto bg-gray-50/50 flex justify-center p-4 relative shadow-inner">
+      <div className="flex-1 min-h-[400px] border border-gray-200 dark:border-slate-700/50 rounded-xl overflow-y-auto bg-gray-50/50 dark:bg-slate-800/50 flex justify-center p-4 relative shadow-inner">
         <Document 
           file={file} 
           onLoadSuccess={({ numPages }) => setNumPages(numPages)}
@@ -64,7 +64,7 @@ export default function StatementViewer({ file, transactions = [] }: StatementVi
           }
           error={<p className="text-red-500 font-bold text-sm tracking-wide pt-20">Error loading document. Ensure it's a valid PDF.</p>}
         >
-          <div className="relative inline-block shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-md overflow-hidden bg-white">
+          <div className="relative inline-block shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-md overflow-hidden bg-white dark:bg-slate-800 flex items-center justify-center">
             <Page 
               pageNumber={1} 
               width={350} 
@@ -96,7 +96,7 @@ export default function StatementViewer({ file, transactions = [] }: StatementVi
       </div>
       
       {numPages && (
-        <p className="text-center text-xs text-gray-400 mt-4 font-bold uppercase tracking-widest">
+        <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-4 font-bold uppercase tracking-widest">
           Page 1 / {numPages}
         </p>
       )}

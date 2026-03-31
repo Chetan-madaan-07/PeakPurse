@@ -31,18 +31,18 @@ export default function AnalyticsChart({ transactions }: AnalyticsProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-      <div className="bg-white p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col justify-center items-center hover:-translate-y-1 transition-transform duration-300">
-        <h3 className="text-sm font-bold tracking-widest text-gray-400 uppercase">Total Verified Spends</h3>
+      <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-gray-100 dark:border-slate-800 flex flex-col justify-center items-center hover:-translate-y-1 transition-transform duration-300">
+        <h3 className="text-sm font-bold tracking-widest text-gray-400 dark:text-gray-500 uppercase">Total Verified Spends</h3>
         <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mt-3 drop-shadow-sm">
           ₹{totalSpent.toLocaleString('en-IN')}
         </p>
-        <p className="text-xs text-emerald-600 mt-5 font-bold bg-emerald-50 px-4 py-1.5 rounded-full ring-1 ring-emerald-200 uppercase tracking-widest">
+        <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-5 font-bold bg-emerald-50 dark:bg-emerald-900/40 px-4 py-1.5 rounded-full ring-1 ring-emerald-200 dark:ring-emerald-800/50 uppercase tracking-widest">
           AI Parsing 100% Successful
         </p>
       </div>
 
-      <div className="bg-white p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-gray-100 h-80 flex flex-col hover:-translate-y-1 transition-transform duration-300">
-        <h3 className="text-sm font-bold tracking-widest text-gray-400 uppercase mb-2 text-center">Spends by Category</h3>
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-gray-100 dark:border-slate-800 h-80 flex flex-col hover:-translate-y-1 transition-transform duration-300">
+        <h3 className="text-sm font-bold tracking-widest text-gray-400 dark:text-gray-500 uppercase mb-2 text-center">Spends by Category</h3>
         <div className="flex-1 w-full relative">
             <ResponsiveContainer width="100%" height="100%">
             <PieChart>
