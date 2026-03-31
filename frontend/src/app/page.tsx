@@ -4,6 +4,7 @@ import { useState } from "react";
 import FileUpload from "../components/FileUpload";
 import TransactionTable from "../components/TransactionTable";
 import AnalyticsChart from "../components/AnalyticsChart";
+import InvestmentAdvisor from '../components/InvestmentAdvisor';
 import dynamic from 'next/dynamic';
 
 // Next.js absolutely requires react-pdf to be rendered only on the client
@@ -63,6 +64,14 @@ export default function Home() {
             </div>
             
             <TransactionTable transactions={transactions} />
+
+            <div className="mt-12 animate-fade-in-up transition-all duration-700">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-extrabold text-gray-800 dark:text-white">Plan Your Financial Future</h2>
+                <p className="text-gray-500 mt-2">Use our advisory engine to reach your goals.</p>
+              </div>
+              <InvestmentAdvisor />
+            </div>
 
             <div className="text-center mt-12 pb-8">
               <button 
