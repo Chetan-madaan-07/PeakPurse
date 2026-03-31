@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useDropzone } from 'react-dropzone';
+import { FileUpload as AceternityFileUpload } from "@/components/ui/file-upload";
 
 interface FileUploadProps {
   onDataReceived: (data: any, uploadedFile: File) => void;
@@ -13,17 +13,11 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
   const [password, setPassword] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      setFile(acceptedFiles[0]);
+  const handleFileChange = (files: File[]) => {
+    if (files && files.length > 0) {
+      setFile(files[0]);
     }
-  }, []);
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { 'application/pdf': ['.pdf'] },
-    maxFiles: 1
-  });
+  };
 
   const handleUpload = async () => {
     if (!file) return;
@@ -68,22 +62,9 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
     <div className="p-6 bg-white dark:bg-slate-900 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-100 dark:border-slate-800 max-w-md mx-auto mt-10">
       <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100 text-center">Scan Bank Statement</h2>
       
-      <div 
-        {...getRootProps()} 
-        className={`border-2 border-dashed rounded-lg p-10 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300
-          ${isDragActive ? 'border-indigo-500 dark:border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 scale-[1.02]' : 'border-gray-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 bg-gray-50 dark:bg-slate-800/50'}`}
-      >
-        <input {...getInputProps()} />
-        <svg className={`w-10 h-10 mb-3 ${isDragActive ? 'text-indigo-500 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
-        {file ? (
-          <p className="text-indigo-600 dark:text-indigo-400 font-medium truncate w-full px-2">{file.name}</p>
-        ) : isDragActive ? (
-          <p className="text-indigo-500 dark:text-indigo-400 font-medium">Drop the PDF here!</p>
-        ) : (
-          <p className="text-gray-500 dark:text-gray-400 text-sm">Drag & drop your PDF statement here, or click to browse</p>
-        )}
+      {/* Newly Integrated Aceternity Drag & Drop Zone */}
+      <div className="w-full border border-dashed border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden bg-white dark:bg-black/20">
+        <AceternityFileUpload onChange={handleFileChange} />
       </div>
 
       <div className="mt-5">

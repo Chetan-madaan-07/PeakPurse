@@ -15,9 +15,12 @@ const nextConfig = {
     NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
   },
   webpack: (config) => {
-    // Required for pdfjs-dist to work with Next.js webpack bundler
-    config.resolve.alias.canvas = false;
-    config.resolve.alias.encoding = false;
+    // Required for pdfjs-dist to work with Next.js webpack bundler safely
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      canvas: false,
+      encoding: false,
+    };
     return config;
   },
   async rewrites() {
