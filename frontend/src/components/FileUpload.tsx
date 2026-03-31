@@ -65,29 +65,29 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
   };
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-100 max-w-md mx-auto mt-10">
-      <h2 className="text-xl font-bold mb-4 text-gray-800 text-center">Scan Bank Statement</h2>
+    <div className="p-6 bg-white dark:bg-slate-900 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-gray-100 dark:border-slate-800 max-w-md mx-auto mt-10">
+      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100 text-center">Scan Bank Statement</h2>
       
       <div 
         {...getRootProps()} 
         className={`border-2 border-dashed rounded-lg p-10 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300
-          ${isDragActive ? 'border-indigo-500 bg-indigo-50 scale-[1.02]' : 'border-gray-300 hover:border-indigo-400 bg-gray-50'}`}
+          ${isDragActive ? 'border-indigo-500 dark:border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 scale-[1.02]' : 'border-gray-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 bg-gray-50 dark:bg-slate-800/50'}`}
       >
         <input {...getInputProps()} />
-        <svg className={`w-10 h-10 mb-3 ${isDragActive ? 'text-indigo-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className={`w-10 h-10 mb-3 ${isDragActive ? 'text-indigo-500 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
         </svg>
         {file ? (
-          <p className="text-indigo-600 font-medium truncate w-full px-2">{file.name}</p>
+          <p className="text-indigo-600 dark:text-indigo-400 font-medium truncate w-full px-2">{file.name}</p>
         ) : isDragActive ? (
-          <p className="text-indigo-500 font-medium">Drop the PDF here!</p>
+          <p className="text-indigo-500 dark:text-indigo-400 font-medium">Drop the PDF here!</p>
         ) : (
-          <p className="text-gray-500 text-sm">Drag & drop your PDF statement here, or click to browse</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Drag & drop your PDF statement here, or click to browse</p>
         )}
       </div>
 
       <div className="mt-5">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
           PDF Password (if protected)
         </label>
         <input 
@@ -95,7 +95,7 @@ export default function FileUpload({ onDataReceived }: FileUploadProps) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter password..."
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none transition-colors"
+          className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none transition-colors text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
         />
       </div>
 
