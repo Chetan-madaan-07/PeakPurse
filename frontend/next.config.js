@@ -14,6 +14,7 @@ const nextConfig = {
     NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3000',
     NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
   },
+  turbopack: {},
   webpack: (config) => {
     // Required for pdfjs-dist to work with Next.js webpack bundler
     config.resolve.alias.canvas = false;
