@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export enum RiskProfile {
   CONSERVATIVE = 'conservative',
@@ -14,9 +14,15 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  // SECURE VERSION: Reverting to NOT NULL now that the database column exists.
-  @Column() 
-  password_hash: string;
+  // Unified: supports both 'password' (auth module) and 'password_hash' (teammate naming)
+  @Column()
+  password: string;
+
+  @Column({ nullable: true })
+  name: string;
+
+  @Column({ default: 'user' })
+  role: string; // 'user' | 'ca' | 'admin'
 
   @Column({
     type: 'enum',
@@ -24,4 +30,10 @@ export class User {
     default: RiskProfile.CONSERVATIVE,
   })
   risk_profile: RiskProfile;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
