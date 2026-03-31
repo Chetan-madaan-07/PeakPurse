@@ -5,15 +5,17 @@ FastAPI service for financial health scoring, transaction categorization,
 and personalized recommendations.
 """
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 import structlog
 import uvicorn
 import os
+import google.generativeai as genai
 
-from src.api.routes import health_score, recommendations, categorizer
+# Added chatbot to your imports
+from src.api.routes import health_score, recommendations, categorizer, chatbot
 from src.core.config import settings
 from src.core.logging import setup_logging
 from src.core.exceptions import setup_exception_handlers
@@ -73,7 +75,13 @@ app.include_router(
     dependencies=[Depends(verify_internal_request)],
 )
 
-
+# NEW: Include Chatbot router
+app.include_router(
+    chatbot.router,
+    prefix="/internal/ml",
+    tags=["chatbot"],
+    dependencies=[Depends(verify_internal_request)],
+)
 
 
 @app.on_event("startup")
@@ -83,10 +91,27 @@ async def startup_event():
     
     # Load ML models
     try:
-        # Initialize models here
+        # Initialize models here (Your LayoutLM and others remain untouched)
         logger.info("ML models loaded successfully")
+        
+        # NEW: Initialize Gemini for the Chatbot
+        api_key = os.getenv("GEMINI_API_KEY") or getattr(settings, 'GEMINI_API_KEY', None)
+        if api_key:
+            genai.configure(api_key=api_key)
+            app.state.gemini_model = genai.GenerativeModel(
+                model_name='gemini-1.5-flash',
+                generation_config={
+                    "temperature": 0.7, # 0.7 gives a good balance of accuracy and conversational flow
+                    "top_p": 0.95,
+                    "max_output_tokens": 8192,
+                }
+            )
+            logger.info("Gemini 1.5 Flash initialized successfully for Chatbot")
+        else:
+            logger.warning("GEMINI_API_KEY not found! Chatbot will not function until key is provided.")
+            
     except Exception as e:
-        logger.error("Failed to load ML models", error=str(e))
+        logger.error("Failed to load ML models or initialize Gemini", error=str(e))
         raise
 
 
@@ -112,7 +137,8 @@ async def root():
             "categorize_batch": "/internal/ml/categorize/batch",
             "categorizer_health": "/internal/ml/categorizer/health",
             "health_score": "/internal/ml/health-score",
-            "recommendations": "/internal/ml/recommendations"
+            "recommendations": "/internal/ml/recommendations",
+            "chatbot": "/internal/ml/chat" # NEW
         },
         "authentication": {
             "method": "X-Internal-Secret header",
@@ -147,12 +173,13 @@ async def swagger_css_map():
 
 
 @app.get("/health")
-async def health_check():
+async def health_check(request: Request):
     """Health check endpoint."""
     return {
         "status": "healthy",
         "service": "peakpurse-ml-service",
         "version": "1.0.0",
+        "gemini_status": "initialized" if hasattr(request.app.state, "gemini_model") else "offline" # NEW
     }
 
 
