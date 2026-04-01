@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Bot, Home, LogIn, LogOut, User, Users, BarChart2, Bell, RefreshCw, TrendingUp, FileText } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -94,6 +95,8 @@ export default function Navbar() {
               )}
             </div>
           )}
+
+          <ThemeSwitcher />
 
           {user ? (
             <>

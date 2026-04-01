@@ -16,9 +16,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <AuthProvider>
             <Navbar />
-            <div className="absolute top-4 right-16 z-50">
-              <ThemeSwitcher />
-            </div>
             {children}
           </AuthProvider>
         </ThemeProvider>
