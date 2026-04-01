@@ -42,24 +42,36 @@ import { SubscriptionModule } from './subscription/subscription.module';
     ScheduleModule.forRoot(),
 
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        type: 'postgres',
-        host: process.env.DB_HOST || 'localhost',
-        port: parseInt(process.env.DB_PORT) || 5432,
-        username: process.env.DB_USERNAME || 'peakpurse_user',
-        password: process.env.DB_PASSWORD || 'password',
-        database: process.env.DB_DATABASE || 'peakpurse_dev',
-        entities: [
-          Transaction, User, Goal, InvestmentPlan, AuditLog,
-          ChatSession, Subscription, Notification, TaxProfile,
-        ],
-        synchronize: process.env.DB_SYNCHRONIZE === 'true',
-        logging: process.env.DB_LOGGING === 'true',
-        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
-        connectTimeoutMS: 30000,
-        retryAttempts: 5,
-        retryDelay: 3000,
-      }),
+      useFactory: () => {
+        const isProduction = process.env.NODE_ENV === 'production';
+        
+        return {
+          type: 'postgres',
+          // Priority: Use DATABASE_URL if it exists (Render standard)
+          url: process.env.DATABASE_URL,
+          
+          // Fallback to individual variables if DATABASE_URL is not present
+          host: process.env.DB_HOST || 'localhost',
+          port: parseInt(process.env.DB_PORT) || 5432,
+          username: process.env.DB_USERNAME || 'peakpurse_user',
+          password: process.env.DB_PASSWORD || 'password',
+          database: process.env.DB_DATABASE || 'peakpurse_dev',
+          
+          entities: [
+            Transaction, User, Goal, InvestmentPlan, AuditLog,
+            ChatSession, Subscription, Notification, TaxProfile,
+          ],
+          synchronize: process.env.DB_SYNCHRONIZE === 'true',
+          logging: process.env.DB_LOGGING === 'true',
+          
+          // SSL is required for Render PostgreSQL in production
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
+          
+          connectTimeoutMS: 30000,
+          retryAttempts: 5,
+          retryDelay: 3000,
+        };
+      },
     }),
 
     TypeOrmModule.forFeature([Transaction, User, Goal, InvestmentPlan, AuditLog]),
