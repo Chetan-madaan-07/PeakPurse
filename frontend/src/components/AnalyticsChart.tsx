@@ -62,10 +62,22 @@ export default function AnalyticsChart({ transactions }: AnalyticsProps) {
                 </Pie>
                 <Tooltip 
                   formatter={(value: any) => `₹${value.toLocaleString('en-IN')}`} 
-                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }}
-                  itemStyle={{ fontWeight: 'bold' }}
+                  contentStyle={{ 
+                      borderRadius: '16px', 
+                      border: 'none', 
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      backdropFilter: 'blur(8px)',
+                      boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 10px 20px -10px rgba(0, 0, 0, 0.05)'
+                  }}
+                  itemStyle={{ fontWeight: '800', fontSize: '14px', color: '#1e293b' }}
                 />
-                <Legend verticalAlign="bottom" height={24} iconType="circle" wrapperStyle={{ fontSize: '12px', fontWeight: '600', color: '#6B7280' }}/>
+                <Legend 
+                    verticalAlign="bottom" 
+                    align="center"
+                    height={36} 
+                    iconType="circle" 
+                    wrapperStyle={{ paddingTop: '20px', fontSize: '11px', fontWeight: 'bold', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                />
             </PieChart>
             </ResponsiveContainer>
         </div>

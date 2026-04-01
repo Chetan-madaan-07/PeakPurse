@@ -9,36 +9,36 @@ interface HeroProps {
 }
 
 export default function Hero({ onGetStarted }: HeroProps) {
-  const title = "Master Your Finances with PeakPurse AI";
+  const title = "Financial Clarity Starts with PeakPurse AI";
 
   return (
     <div className="relative mx-auto my-10 flex max-w-7xl flex-col items-center justify-center">
       {/* Decorative gradient lines */}
-      <div className="absolute inset-y-0 left-0 h-full w-px bg-neutral-200/80 dark:bg-neutral-800/80 pointer-events-none">
-        <div className="absolute top-0 h-40 w-px bg-gradient-to-b from-transparent via-blue-500 to-transparent" />
+      <div className="absolute inset-y-0 left-0 h-full w-px bg-neutral-200/50 dark:bg-neutral-800/50 pointer-events-none">
+        <div className="absolute top-0 h-48 w-px bg-gradient-to-b from-transparent via-indigo-500 to-transparent shadow-[0_0_15px_rgba(79,70,229,0.5)]" />
       </div>
-      <div className="absolute inset-y-0 right-0 h-full w-px bg-neutral-200/80 dark:bg-neutral-800/80 pointer-events-none">
-        <div className="absolute h-40 w-px bg-gradient-to-b from-transparent via-blue-500 to-transparent" />
+      <div className="absolute inset-y-0 right-0 h-full w-px bg-neutral-200/50 dark:bg-neutral-800/50 pointer-events-none">
+        <div className="absolute h-48 w-px bg-gradient-to-b from-transparent via-fuchsia-500 to-transparent shadow-[0_0_15px_rgba(192,38,211,0.5)]" />
       </div>
-      <div className="absolute inset-x-0 bottom-0 h-px w-full bg-neutral-200/80 dark:bg-neutral-800/80 pointer-events-none">
-        <div className="absolute mx-auto h-px w-40 bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-px w-full bg-neutral-200/50 dark:bg-neutral-800/50 pointer-events-none">
+        <div className="absolute mx-auto h-px w-64 bg-gradient-to-r from-transparent via-purple-500 to-transparent shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
       </div>
 
-      <div className="px-4 py-10 md:py-20">
-        <h1 className="relative z-10 mx-auto max-w-4xl text-center text-3xl font-bold text-slate-800 md:text-5xl lg:text-7xl dark:text-slate-100 tracking-tight">
+      <div className="px-4 py-20 md:py-32">
+        <h1 className="relative z-10 mx-auto max-w-5xl text-center text-4xl font-extrabold text-slate-900 md:text-6xl lg:text-8xl dark:text-white tracking-tighter leading-[1.1]">
           {title.split(" ").map((word, index) => (
             <motion.span
               key={index}
-              initial={{ opacity: 0, filter: "blur(4px)", y: 10 }}
+              initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
               animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
               transition={{
-                duration: 0.3,
-                delay: index * 0.1,
-                ease: "easeInOut",
+                duration: 0.4,
+                delay: index * 0.08,
+                ease: [0.21, 0.47, 0.32, 0.98],
               }}
-              className="mr-2 inline-block"
+              className="mr-3 inline-block"
             >
-              <span className={word === "PeakPurse" || word === "AI" ? "text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600" : ""}>
+              <span className={word === "PeakPurse" || word === "AI" || word === "Financial" ? "text-transparent bg-clip-text bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600" : ""}>
                 {word}
               </span>
             </motion.span>
@@ -46,55 +46,44 @@ export default function Hero({ onGetStarted }: HeroProps) {
         </h1>
         
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.8 }}
-          className="relative z-10 mx-auto max-w-2xl py-6 text-center text-lg font-medium text-neutral-600 dark:text-neutral-400"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
+          className="relative z-10 mx-auto max-w-2xl py-8 text-center text-lg md:text-xl font-medium text-neutral-600 dark:text-neutral-400 leading-relaxed"
         >
-          The intelligent financial command center that parses your bank statements, organizes your wealth, and provides expert AI-driven advice—all in one secure place.
+          Stop wrestling with PDFs. Our AI engine parses bank statements in seconds, 
+          uncovers hidden tax savings, and generates personalized wealth plans 
+          with professional-grade accuracy.
         </motion.p>
         
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 1 }}
-          className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-4"
+          transition={{ duration: 0.4, delay: 1.1 }}
+          className="relative z-10 mt-6 flex flex-wrap items-center justify-center gap-6"
         >
           <button 
             onClick={onGetStarted}
-            className="w-60 transform rounded-full bg-indigo-600 px-8 py-3 font-bold text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20 transition-all duration-300 hover:-translate-y-1 hover:bg-indigo-500 hover:shadow-xl active:scale-95 flex items-center justify-center gap-2"
+            className="group relative inline-flex h-14 w-64 items-center justify-center overflow-hidden rounded-full bg-indigo-600 px-8 font-bold text-white shadow-2xl transition-all duration-300 hover:bg-indigo-500 hover:shadow-indigo-500/25 active:scale-95"
           >
-            Get Started
-            <ArrowRight className="w-4 h-4" />
+            <span className="relative z-10 flex items-center gap-2">
+              Analyze Statement
+              <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+            </span>
           </button>
+          
           <button 
             onClick={() => {
               document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="w-60 transform rounded-full border border-gray-200 bg-white px-8 py-3 font-bold text-gray-700 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-gray-50 dark:border-gray-800 dark:bg-slate-900 dark:text-gray-200 dark:hover:bg-slate-800 flex items-center justify-center gap-2"
+            className="h-14 w-64 rounded-full border border-neutral-200 bg-white/50 backdrop-blur-sm px-8 font-bold text-slate-700 shadow-sm transition-all duration-300 hover:border-indigo-200 hover:bg-white hover:text-indigo-600 dark:border-neutral-800 dark:bg-slate-900/50 dark:text-gray-300 dark:hover:border-indigo-900 dark:hover:text-indigo-400 flex items-center justify-center gap-2"
           >
-            <Info className="w-4 h-4" />
-            Explore Features
+            <Info className="h-4 w-4" />
+            Explore Engine
           </button>
         </motion.div>
         
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 1.2 }}
-          className="relative z-10 mt-20 rounded-3xl border border-neutral-200 bg-white/40 backdrop-blur-md p-4 shadow-xl dark:border-neutral-800 dark:bg-neutral-900/40"
-        >
-          <div className="w-full overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 shadow-inner group">
-             <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 via-transparent to-purple-500/10 pointer-events-none group-hover:opacity-100 opacity-60 transition-opacity" />
-            <img
-              src="https://assets.aceternity.com/pro/aceternity-landing.webp"
-              alt="PeakPurse Analytics Dashboard"
-              className="aspect-[16/9] h-auto w-full object-cover rounded-xl transition-transform duration-500 group-hover:scale-[1.01]"
-              height={1000}
-              width={1000}
-            />
-          </div>
-        </motion.div>
+
       </div>
     </div>
   );

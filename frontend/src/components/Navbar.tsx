@@ -1,25 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Bot, Home, LogIn, LogOut, User, Users, BarChart2, Bell, RefreshCw, TrendingUp, FileText } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { LogIn, LogOut, User, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const navLinks = [
-  { href: "/", label: "Dashboard", icon: Home },
-  { href: "/chat", label: "PeakBot", icon: Bot },
-  { href: "/investment", label: "Invest", icon: TrendingUp },
-  { href: "/tax", label: "Tax", icon: FileText },
-  { href: "/ca-directory", label: "CA Finder", icon: Users },
-  { href: "/benchmarking", label: "Benchmarking", icon: BarChart2 },
-  { href: "/subscriptions", label: "Subscriptions", icon: RefreshCw },
-];
-
 export default function Navbar() {
-  const pathname = usePathname();
   const { user, token, logout } = useAuth();
   const router = useRouter();
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -30,7 +19,7 @@ export default function Navbar() {
     axios.get("/api/subscriptions/notifications", { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setNotifications(res.data))
       .catch(() => {});
-  }, [token]);
+  }, [token, token]);
 
   const handleLogout = () => { logout(); router.push("/login"); };
 
@@ -50,25 +39,8 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Nav links */}
-        <div className="flex items-center gap-0.5 overflow-x-auto">
-          {navLinks.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname === href;
-            return (
-              <Link key={href} href={href}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap
-                  ${isActive
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-indigo-900"
-                    : "text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800"
-                  }`}>
-                <Icon size={13} />{label}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Auth + Bell */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        {/* Global Utilities */}
+        <div className="flex items-center gap-3 ml-auto">
           {user && (
             <div className="relative">
               <button onClick={() => setShowNotifs(p => !p)}
@@ -107,13 +79,13 @@ export default function Navbar() {
                 <User size={12} />{user.name || user.email.split("@")[0]}
               </div>
               <button onClick={handleLogout}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
-                <LogOut size={12} />Logout
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all font-bold">
+                <LogOut size={12} />Log out
               </button>
             </>
           ) : (
             <Link href="/login"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-all">
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-md shadow-indigo-200 dark:shadow-none">
               <LogIn size={13} />Sign In
             </Link>
           )}
