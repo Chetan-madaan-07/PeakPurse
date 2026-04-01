@@ -14,7 +14,7 @@ export default function InvestmentAdvisor() {
   const { register: registerRisk, handleSubmit: handleRiskSubmit } = useForm();
 
   const onGoalSubmit = (data: any) => {
-    // Edge Case: Check if target date is in the current month [cite: 78]
+    // Edge Case: Check if target date is in the current month 
     const targetDate = new Date(data.targetDate);
     const currentDate = new Date();
     if (targetDate.getMonth() === currentDate.getMonth() && targetDate.getFullYear() === currentDate.getFullYear()) {
@@ -26,11 +26,11 @@ export default function InvestmentAdvisor() {
   };
 
   const onRiskSubmit = async (data: any) => {
-    // Here you will call your Investment_Service backend [cite: 65]
+    // Here you will call your Investment_Service backend 
     // Simulating backend response for the dashboard
     const simulatedResponse = {
       riskIdentity: "Moderate Investor",
-      feasibility: "Stretched", // achievable, stretched, unrealistic [cite: 69]
+      feasibility: "Stretched", // achievable, stretched, unrealistic 
       assetMix: [
         { name: 'Equity Funds', value: 50 },
         { name: 'Debt Funds', value: 50 }
@@ -49,32 +49,32 @@ export default function InvestmentAdvisor() {
   return (
     <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-slate-800">
       
-      {/* Step 1: Goal Intake Form [cite: 62] */}
+      {/* Step 1: Goal Intake Form */}
       {step === 1 && (
         <form onSubmit={handleGoalSubmit(onGoalSubmit)} className="space-y-4">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Step 1: Define Your Goal</h2>
           {error && <p className="text-red-500 font-semibold">{error}</p>}
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Goal Name</label>
-            <input {...registerGoal("goalName", { required: true })} placeholder="e.g., New Car" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white" />
+            <label className="block text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Goal Name</label>
+            <input {...registerGoal("goalName", { required: true })} placeholder="e.g., Retirement Fund" className="mt-1 block w-full rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:text-white transition-all" />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Target Amount (₹)</label>
-            <input type="number" {...registerGoal("targetAmount", { required: true })} placeholder="2000000" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white" />
+            <label className="block text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Target Amount (₹)</label>
+            <input type="number" {...registerGoal("targetAmount", { required: true })} placeholder="20,00,000" className="mt-1 block w-full rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:text-white transition-all" />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Target Date</label>
-            <input type="date" {...registerGoal("targetDate", { required: true })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-slate-800 dark:text-white" />
+            <label className="block text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Target Date</label>
+            <input type="date" {...registerGoal("targetDate", { required: true })} className="mt-1 block w-full rounded-xl border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-950 p-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:text-white transition-all" />
           </div>
 
           <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 font-bold mt-4">Next: Risk Profiling</button>
         </form>
       )}
 
-      {/* Step 2: Risk Profiler UI [cite: 64] */}
+      {/* Step 2: Risk Profiler UI */}
       {step === 2 && (
         <form onSubmit={handleRiskSubmit(onRiskSubmit)} className="space-y-4">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Step 2: Risk Profiler</h2>
@@ -106,7 +106,7 @@ export default function InvestmentAdvisor() {
         </form>
       )}
 
-      {/* Step 3: The Plan Dashboard [cite: 66] */}
+      {/* Step 3: The Plan Dashboard */}
       {step === 3 && planData && (
         <div className="space-y-8 animate-fade-in-up">
           <div className="flex justify-between items-center border-b pb-4 border-gray-200 dark:border-slate-700">
@@ -114,7 +114,7 @@ export default function InvestmentAdvisor() {
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Your Investment Plan</h2>
                 <p className="text-indigo-600 font-semibold mt-1">Profile: {planData.riskIdentity}</p>
             </div>
-            {/* Feasibility Badge [cite: 69] */}
+            {/* Feasibility Badge */}
             <span className={`px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wide
               ${planData.feasibility === 'Achievable' ? 'bg-green-100 text-green-800' : 
                 planData.feasibility === 'Stretched' ? 'bg-yellow-100 text-yellow-800' : 
@@ -124,7 +124,7 @@ export default function InvestmentAdvisor() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Donut Chart for Asset Mix [cite: 68] */}
+            {/* Donut Chart for Asset Mix */}
             <div className="h-64 flex flex-col items-center">
               <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-2">Recommended Asset Mix</h3>
               <ResponsiveContainer width="100%" height="100%">
@@ -140,7 +140,7 @@ export default function InvestmentAdvisor() {
               </ResponsiveContainer>
             </div>
 
-            {/* Line Chart for Scenarios [cite: 68] */}
+            {/* Line Chart for Scenarios */}
             <div className="h-64 flex flex-col items-center">
               <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-2">Return Scenarios</h3>
               <ResponsiveContainer width="100%" height="100%">
@@ -158,22 +158,25 @@ export default function InvestmentAdvisor() {
             </div>
           </div>
 
-          {/* Step 4: Alternative Suggestions [cite: 70] */}
-          {(planData.feasibility === 'Stretched' || planData.feasibility === 'Unrealistic') && (
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 mt-6">
-              <h3 className="text-lg font-bold text-yellow-800 dark:text-yellow-500">Plan Adjustments Required</h3>
-              <p className="text-yellow-700 dark:text-yellow-600 mb-3">Your current goal is {planData.feasibility.toLowerCase()}. Consider these alternatives:</p>
-              <div className="space-y-2">
-                {/* Option A & B [cite: 73] */}
-                <button className="w-full text-left p-3 bg-white dark:bg-slate-800 rounded-md border border-yellow-200 dark:border-yellow-700 hover:bg-yellow-100 transition">
-                  <strong>Option A:</strong> Lower monthly contribution + Extended target date
+          {/* Step 4: Alternative Suggestions */}
+          <div className="bg-yellow-50 dark:bg-yellow-900/10 border-l-4 border-yellow-400 p-6 rounded-r-xl mt-6">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="size-2 rounded-full bg-yellow-400 animate-pulse" />
+                <h3 className="text-lg font-bold text-yellow-800 dark:text-yellow-500">Plan Adjustments Required</h3>
+              </div>
+              <p className="text-yellow-700 dark:text-yellow-400/80 mb-4 font-medium">Your current goal is {planData.feasibility.toLowerCase()}. Consider these optimized alternatives:</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* Option A & B */}
+                <button className="text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-yellow-200 dark:border-yellow-900/50 hover:bg-yellow-100 dark:hover:bg-yellow-900/20 transition-all font-semibold shadow-sm">
+                  <span className="text-yellow-600 block text-xs uppercase tracking-widest mb-1">Option A</span>
+                  Lower monthly contribution + Extended target date
                 </button>
-                <button className="w-full text-left p-3 bg-white dark:bg-slate-800 rounded-md border border-yellow-200 dark:border-yellow-700 hover:bg-yellow-100 transition">
-                  <strong>Option B:</strong> Higher monthly contribution + Original date
+                <button className="text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-yellow-200 dark:border-yellow-900/50 hover:bg-yellow-100 dark:hover:bg-yellow-900/20 transition-all font-semibold shadow-sm">
+                  <span className="text-yellow-600 block text-xs uppercase tracking-widest mb-1">Option B</span>
+                  Higher monthly contribution + Original date
                 </button>
               </div>
             </div>
-          )}
 
           <div className="mt-8 text-xs text-gray-400 text-center">
              * Disclaimer: This platform is not a SEBI-registered RIA. Recommendations are strictly educational.

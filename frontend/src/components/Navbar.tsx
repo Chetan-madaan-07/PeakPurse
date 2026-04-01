@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Bot, Home, LogIn, LogOut, User, Users, BarChart2, Bell, RefreshCw, TrendingUp, FileText, Coffee } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { LogIn, LogOut, User, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -19,7 +22,6 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const pathname = usePathname();
   const { user, token, logout } = useAuth();
   const router = useRouter();
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -30,7 +32,7 @@ export default function Navbar() {
     axios.get("/api/subscriptions/notifications", { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setNotifications(res.data))
       .catch(() => {});
-  }, [token]);
+  }, [token, token]);
 
   const handleLogout = () => { logout(); router.push("/login"); };
 
@@ -43,29 +45,15 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 flex-shrink-0">
-          PeakPurse
+        <Link href="/" className="flex items-center gap-2 flex-shrink-0 group">
+          <div className="size-7 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-md group-hover:scale-110 transition-transform" />
+          <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">
+            PeakPurse
+          </span>
         </Link>
 
-        {/* Nav links */}
-        <div className="flex items-center gap-0.5 overflow-x-auto">
-          {navLinks.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname === href;
-            return (
-              <Link key={href} href={href}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap
-                  ${isActive
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-indigo-900"
-                    : "text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800"
-                  }`}>
-                <Icon size={13} />{label}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Auth + Bell */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        {/* Global Utilities */}
+        <div className="flex items-center gap-3 ml-auto">
           {user && (
             <div className="relative">
               <button onClick={() => setShowNotifs(p => !p)}
@@ -96,19 +84,21 @@ export default function Navbar() {
             </div>
           )}
 
+          <ThemeSwitcher />
+
           {user ? (
             <>
               <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-indigo-50 dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 text-xs font-semibold">
                 <User size={12} />{user.name || user.email.split("@")[0]}
               </div>
               <button onClick={handleLogout}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
-                <LogOut size={12} />Logout
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all font-bold">
+                <LogOut size={12} />Log out
               </button>
             </>
           ) : (
             <Link href="/login"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-all">
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-md shadow-indigo-200 dark:shadow-none">
               <LogIn size={13} />Sign In
             </Link>
           )}

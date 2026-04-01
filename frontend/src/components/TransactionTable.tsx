@@ -44,8 +44,8 @@ export default function TransactionTable({ transactions }: TableProps) {
                     {t.category}
                   </span>
                 </td>
-                <td className="px-6 py-4 font-extrabold text-gray-900 dark:text-gray-100 text-right text-base">
-                  {t.amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }).replace('₹', '')}
+                <td className="px-6 py-4 font-extrabold text-gray-900 dark:text-white text-right text-base tracking-tight tabular-nums">
+                  ₹{t.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </td>
               </tr>
             ))}

@@ -61,10 +61,10 @@ export const FileUpload = ({
         />
         <div className="flex flex-col items-center justify-center">
           <p className="relative z-20 font-sans font-bold text-neutral-700 dark:text-neutral-300 text-base">
-            Upload document
+            Upload Financial Statement
           </p>
-          <p className="relative z-20 font-sans font-normal text-neutral-400 dark:text-neutral-400 text-sm mt-2 max-w-xs text-center">
-            Drag & drop your PDF statement here to unleash PeakPurse AI parsing
+          <p className="relative z-20 font-sans font-normal text-neutral-500 dark:text-neutral-400 text-sm mt-2 max-w-xs text-center border-t border-gray-100 dark:border-slate-800 pt-4">
+            Drag & drop your PDF statement here. <span className="text-indigo-600 dark:text-indigo-400 font-bold">PeakPurse AI</span> will instantly extract and categorize your transactions.
           </p>
           <div className="relative w-full mt-10 max-w-xl mx-auto">
             {files.length > 0 &&

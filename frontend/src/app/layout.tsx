@@ -2,6 +2,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import Navbar from '@/components/Navbar';
+import { AppDock } from '@/components/AppDock';
 import { AuthProvider } from '@/contexts/AuthContext';
 
 export const metadata = {
@@ -16,10 +17,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <AuthProvider>
             <Navbar />
-            <div className="absolute top-4 right-16 z-50">
-              <ThemeSwitcher />
-            </div>
-            {children}
+            <main className="relative min-h-screen pb-32">
+              {children}
+            </main>
+            <AppDock />
           </AuthProvider>
         </ThemeProvider>
       </body>
