@@ -51,26 +51,28 @@ export class FileUploadService {
 
       // Create FormData for multipart/form-data
       const formData = new FormData();
-      formData.append('file', fileBuffer as any, originalName);
-      
+      // Convert Buffer to Uint8Array to satisfy TypeScript's BlobPart type
+      const blob = new Blob([new Uint8Array(fileBuffer)], { type: 'application/pdf' });
+      formData.append('file', blob, originalName);
+
       if (password) {
         formData.append('password', password);
       }
 
-      // Send to ML service with internal authentication
-      const response: AxiosResponse<MLTransactionResponse> = await axios.post(
+      // Send to ML service categorizer endpoint
+      const response: AxiosResponse<any> = await axios.post(
         `${this.mlServiceUrl}/internal/ml/categorize`,
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
             'X-Internal-Secret': this.internalSecret,
           },
-          timeout: 30000, // 30 seconds timeout
+          timeout: 60000, // 60 seconds — PDF processing can be slow
         }
       );
 
-      this.logger.log(`ML service processed ${response.data.data.transactions.length} transactions`);
+      // ML service returns { success, data: { transactions, metadata } }
+      this.logger.log(`ML service processed ${response.data?.data?.transactions?.length ?? 0} transactions`);
       return response.data;
 
     } catch (error) {

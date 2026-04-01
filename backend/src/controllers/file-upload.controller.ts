@@ -65,22 +65,58 @@ export class FileUploadController {
         password,
       );
 
-      // Process transactions and save to database
-      const result = await this.transactionService.processMLResponse(mlResponse);
+      // mlResponse is { success, data: { transactions, metadata } }
+      const transactions = mlResponse?.data?.transactions || [];
+
+      // Save to DB (best-effort — don't fail the request if DB save fails)
+      let dbResult = { total: 0, added: 0, duplicates: 0, errors: [] as string[] };
+      if (transactions.length > 0) {
+        try {
+          // Wrap in the shape TransactionService.processMLResponse expects
+          const wrapped = {
+            success: true,
+            data: {
+              transactions: transactions.map((t: any) => ({
+                transaction_hash: t.transaction_hash,
+                date: t.date,
+                amount: t.amount,
+                merchant_name: t.merchant_name,
+                description: t.description,
+                category: t.category,
+                category_source: t.category_source || 'rule',
+                is_recurring: t.is_recurring || false,
+                tax_relevant: t.tax_relevant || false,
+                confidence: t.confidence || 0.85,
+                page_number: t.page_number || 1,
+                transaction_index: t.transaction_index || 0,
+                raw_tokens: t.raw_tokens || [],
+                processed_at: t.processed_at || new Date().toISOString(),
+                processor_version: t.processor_version || '2.0.0',
+              })),
+              metadata: mlResponse.data.metadata,
+            },
+          } as any;
+          dbResult = await this.transactionService.processMLResponse(wrapped);
+        } catch (dbErr) {
+          this.logger.warn('DB save failed (non-fatal)', dbErr.message);
+        }
+      }
 
       return {
         success: true,
-        message: 'File processed successfully',
+        message: transactions.length > 0
+          ? `Extracted ${transactions.length} transactions`
+          : 'No transactions found in this PDF',
         data: {
           filename: file.originalname,
           size: file.size,
-          transactions: result.transactions,
-          processing_time: mlResponse.data.metadata.processing_time,
+          transactions,
+          processing_time: mlResponse?.data?.metadata?.processing_time || 0,
           stats: {
-            total: result.total,
-            added: result.added,
-            duplicates: result.duplicates,
-            errors: result.errors,
+            total: transactions.length,
+            added: dbResult.added,
+            duplicates: dbResult.duplicates,
+            errors: dbResult.errors,
           },
         },
       };
