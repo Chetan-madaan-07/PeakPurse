@@ -11,7 +11,8 @@ import {
   IconSmartHome,
   IconUsers,
   IconRefresh,
-  IconChartBar
+  IconChartBar,
+  IconPigMoney
 } from "@tabler/icons-react";
 
 export function AppDock() {
@@ -36,6 +37,13 @@ export function AppDock() {
         <IconChartPie className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
       href: "/investment",
+    },
+    {
+      title: "Retirement",
+      icon: (
+        <IconPigMoney className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "/retirement",
     },
     {
       title: "Tax Engine",
