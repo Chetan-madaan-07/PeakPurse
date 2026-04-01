@@ -43,8 +43,11 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 flex-shrink-0">
-          PeakPurse
+        <Link href="/" className="flex items-center gap-2 flex-shrink-0 group">
+          <div className="size-7 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-md group-hover:scale-110 transition-transform" />
+          <span className="text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">
+            PeakPurse
+          </span>
         </Link>
 
         {/* Nav links */}
