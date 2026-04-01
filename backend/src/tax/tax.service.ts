@@ -52,6 +52,25 @@ export class TaxService {
     };
   }
 
+  // ─── NPS Specific Tax Benefits (Section 80CCD(1B)) ──────────────────────────
+  
+  async calculateNpsTaxBenefit(userId: string, fy: string, npsContribution: number): Promise<number> {
+    const profile = await this.getOrCreate(userId, fy);
+    const { old: taxBefore } = this.computeBothRegimes(profile);
+
+    // Create a temporary profile to simulate the added contribution
+    const tempProfile = new TaxProfile();
+    Object.assign(tempProfile, profile);
+    
+    // Cap at ₹50,000 maximum allowable for 80CCD(1B)
+    tempProfile.deduction_80ccd = Math.min(50000, Number(profile.deduction_80ccd || 0) + npsContribution);
+
+    const { old: taxAfter } = this.computeBothRegimes(tempProfile);
+
+    // Return the exact immediate tax saved
+    return Math.max(0, taxBefore - taxAfter);
+  }
+
   // ─── Tax computation ─────────────────────────────────────────────────────────
 
   private computeBothRegimes(p: TaxProfile) {

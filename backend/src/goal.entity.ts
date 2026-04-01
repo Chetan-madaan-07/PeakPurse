@@ -17,8 +17,6 @@ export class Goal {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // In a real app this would be a @ManyToOne relation, 
-  // but for a hackathon keeping it as a simple column prevents TypeORM circular dependency headaches
   @Column({ type: 'uuid', nullable: true }) 
   user_id: string;
 

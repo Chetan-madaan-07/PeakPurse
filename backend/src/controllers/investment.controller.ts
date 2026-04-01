@@ -12,7 +12,6 @@ export class InvestmentController {
     @InjectRepository(Goal) private goalRepo: Repository<Goal>,
   ) {}
 
-  /** POST /api/investments/goals — create a goal */
   @UseGuards(JwtAuthGuard)
   @Post('goals')
   async createGoal(@Request() req, @Body() body: {
@@ -28,14 +27,12 @@ export class InvestmentController {
     return this.investmentService.createGoal(req.user.id, body as any);
   }
 
-  /** GET /api/investments/goals — list user's goals */
   @UseGuards(JwtAuthGuard)
   @Get('goals')
   async getGoals(@Request() req) {
     return this.investmentService.getUserGoals(req.user.id);
   }
 
-  /** POST /api/investments/risk-profile — submit 8-question quiz */
   @UseGuards(JwtAuthGuard)
   @Post('risk-profile')
   async submitRiskProfile(@Request() req, @Body() body: { answers: number[] }) {
@@ -47,7 +44,6 @@ export class InvestmentController {
     return { success: true, data: { risk_profile: profile, strategy: mix } };
   }
 
-  /** POST /api/investments/feasibility — check goal feasibility */
   @UseGuards(JwtAuthGuard)
   @Post('feasibility')
   async checkFeasibility(@Request() req, @Body() body: { goalId: string; manualSurplus?: number }) {
@@ -56,7 +52,6 @@ export class InvestmentController {
     return { success: true, data: result };
   }
 
-  /** POST /api/investments/generate-plan — full plan with SIP + scenarios */
   @UseGuards(JwtAuthGuard)
   @Post('generate-plan')
   async generatePlan(@Request() req, @Body() body: { goalId: string; manualSurplus?: number }) {
@@ -65,7 +60,28 @@ export class InvestmentController {
     return { success: true, data: result };
   }
 
-  /** GET /api/investments/seed-test-data — dev helper */
+  @UseGuards(JwtAuthGuard)
+  @Post('retirement-plan')
+  async generateRetirementPlan(@Request() req, @Body() body: {
+    currentAge: number;
+    retirementAge: number;
+    lifeExpectancy: number;
+    expectedReturnRate: number;
+    inflationRate: number;
+    includeEPF: boolean;
+    stepUpSIP?: boolean;           // NEW: 10% annual increase
+    lifestyleRatio?: number;       // NEW: e.g., 0.7 for modest
+    manualTargetCorpus?: number;   // NEW: User override
+    manualCurrentSavings?: number;
+    manualMonthlyExpenses?: number;
+  }) {
+    if (!body.currentAge || !body.retirementAge || !body.expectedReturnRate || !body.inflationRate) {
+      throw new BadRequestException('Missing required retirement parameters.');
+    }
+    const result = await this.investmentService.generateRetirementPlan(req.user.id, body);
+    return { success: true, data: result };
+  }
+
   @Get('seed-test-data')
   async seedTestData() {
     const targetDate = new Date();
