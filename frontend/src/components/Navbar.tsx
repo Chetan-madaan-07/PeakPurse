@@ -1,12 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Bot, Home, LogIn, LogOut, User, Users, BarChart2, Bell, RefreshCw, TrendingUp, FileText, Coffee } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { LogIn, LogOut, User, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { useState, useEffect } from "react";
 import axios from "axios";
+
+const navLinks = [
+  { href: "/", label: "Dashboard", icon: Home },
+  { href: "/chat", label: "PeakBot", icon: Bot },
+  { href: "/investment", label: "Invest", icon: TrendingUp },
+  { href: "/retirement", label: "Retire", icon: Coffee },
+  { href: "/tax", label: "Tax", icon: FileText },
+  { href: "/ca-directory", label: "CA Finder", icon: Users },
+  { href: "/benchmarking", label: "Benchmarking", icon: BarChart2 },
+  { href: "/subscriptions", label: "Subscriptions", icon: RefreshCw },
+];
 
 export default function Navbar() {
   const { user, token, logout } = useAuth();

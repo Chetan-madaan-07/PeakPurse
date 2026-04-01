@@ -18,11 +18,9 @@ export class InvestmentPlan {
   })
   risk_profile: RiskProfile;
 
-  // Stores JSON like: { "equity": 0.8, "debt": 0.2 }
   @Column({ type: 'jsonb' })
   asset_mix: Record<string, number>;
 
-  // Stores JSON like: { "conservative": 500000, "base": 600000, "optimistic": 750000 }
   @Column({ type: 'jsonb', nullable: true })
   return_scenarios: Record<string, number>;
 
