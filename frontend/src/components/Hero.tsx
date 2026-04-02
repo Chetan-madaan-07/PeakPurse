@@ -24,8 +24,8 @@ export default function Hero({ onGetStarted }: HeroProps) {
         <div className="absolute mx-auto h-px w-64 bg-gradient-to-r from-transparent via-purple-500 to-transparent shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
       </div>
 
-      <div className="px-4 py-20 md:py-32">
-        <h1 className="relative z-10 mx-auto max-w-5xl text-center text-4xl font-extrabold text-slate-900 md:text-6xl lg:text-8xl dark:text-white tracking-tighter leading-[1.1]">
+      <div className="px-4 py-12 md:py-32">
+        <h1 className="relative z-10 mx-auto max-w-5xl text-center text-3xl font-extrabold text-slate-900 md:text-6xl lg:text-8xl dark:text-white tracking-tighter leading-[1.1]">
           {title.split(" ").map((word, index) => (
             <motion.span
               key={index}
@@ -60,11 +60,11 @@ export default function Hero({ onGetStarted }: HeroProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 1.1 }}
-          className="relative z-10 mt-6 flex flex-wrap items-center justify-center gap-6"
+          className="relative z-10 mt-6 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4"
         >
           <button 
             onClick={onGetStarted}
-            className="group relative inline-flex h-14 w-64 items-center justify-center overflow-hidden rounded-full bg-indigo-600 px-8 font-bold text-white shadow-2xl transition-all duration-300 hover:bg-indigo-500 hover:shadow-indigo-500/25 active:scale-95"
+            className="group relative inline-flex h-12 sm:h-14 w-full sm:w-64 items-center justify-center overflow-hidden rounded-full bg-indigo-600 px-8 font-bold text-white shadow-2xl transition-all duration-300 hover:bg-indigo-500 hover:shadow-indigo-500/25 active:scale-95"
           >
             <span className="relative z-10 flex items-center gap-2">
               Analyze Statement
@@ -76,7 +76,7 @@ export default function Hero({ onGetStarted }: HeroProps) {
             onClick={() => {
               document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="h-14 w-64 rounded-full border border-neutral-200 bg-white/50 backdrop-blur-sm px-8 font-bold text-slate-700 shadow-sm transition-all duration-300 hover:border-indigo-200 hover:bg-white hover:text-indigo-600 dark:border-neutral-800 dark:bg-slate-900/50 dark:text-gray-300 dark:hover:border-indigo-900 dark:hover:text-indigo-400 flex items-center justify-center gap-2"
+            className="h-12 sm:h-14 w-full sm:w-64 rounded-full border border-neutral-200 bg-white/50 backdrop-blur-sm px-8 font-bold text-slate-700 shadow-sm transition-all duration-300 hover:border-indigo-200 hover:bg-white hover:text-indigo-600 dark:border-neutral-800 dark:bg-slate-900/50 dark:text-gray-300 dark:hover:border-indigo-900 dark:hover:text-indigo-400 flex items-center justify-center gap-2"
           >
             <Info className="h-4 w-4" />
             Explore Engine

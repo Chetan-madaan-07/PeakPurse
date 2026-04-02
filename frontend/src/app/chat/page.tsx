@@ -31,6 +31,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -86,8 +87,18 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-slate-950 pt-14">
 
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-30 bg-black/40 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
       {/* ── Left Panel ── */}
-      <aside className="w-64 border-r border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col p-5 gap-5">
+      <aside className={`
+        fixed md:relative z-40 md:z-auto top-14 md:top-auto bottom-0 left-0
+        w-64 border-r border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col p-5 gap-5
+        transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+      `}>
 
         {/* Bot Profile */}
         <div className="flex flex-col items-center gap-3 pt-4">
@@ -147,20 +158,27 @@ export default function ChatPage() {
       <main className="flex-1 flex flex-col min-w-0">
 
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 flex items-center justify-center">
+        <div className="px-4 py-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-3">
+          <button
+            onClick={() => setSidebarOpen(p => !p)}
+            className="md:hidden p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition-all flex-shrink-0"
+            aria-label="Toggle sidebar"
+          >
+            <Bot size={18} className="text-indigo-500" />
+          </button>
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 flex items-center justify-center flex-shrink-0">
             <Bot size={16} className="text-white" />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="font-bold text-gray-800 dark:text-gray-100 text-sm">PeakBot</p>
-            <p className="text-xs text-gray-400 dark:text-gray-500">
+            <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
               Gemini 1.5 Flash · {user ? "Personalized mode" : "Guest mode — log in for personalized answers"}
             </p>
           </div>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               {msg.role === "bot" && (
@@ -194,7 +212,7 @@ export default function ChatPage() {
         </div>
 
         {/* Input */}
-        <div className="px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <div className="px-4 py-4 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900">
           <form onSubmit={e => { e.preventDefault(); sendMessage(input); }} className="flex items-center gap-3">
             <input
               type="text"

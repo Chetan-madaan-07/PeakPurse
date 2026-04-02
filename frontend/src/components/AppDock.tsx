@@ -76,9 +76,8 @@ export function AppDock() {
   ];
 
   return (
-    <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[60]">
+    <div className="fixed bottom-6 right-4 md:bottom-10 md:left-1/2 md:right-auto md:-translate-x-1/2 z-[60]">
       <FloatingDock
-        mobileClassName="translate-y-20"
         items={links}
       />
     </div>

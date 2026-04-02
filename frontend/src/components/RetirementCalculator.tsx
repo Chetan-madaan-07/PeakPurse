@@ -111,7 +111,7 @@ export default function RetirementCalculator() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
       {/* Input Form Column */}
       <div className="col-span-1 bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 p-6 space-y-8">
         
@@ -254,7 +254,7 @@ export default function RetirementCalculator() {
                    <Wallet size={16} className="text-gray-400"/>
                    <p className="text-xs font-extrabold text-gray-500 uppercase tracking-widest">Required Monthly SIP</p>
                 </div>
-                <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-indigo-600 to-purple-600 mt-2">
+                <p className="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-indigo-600 to-purple-600 mt-2">
                   ₹{result.required_sip.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </p>
                 <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700">
@@ -269,7 +269,7 @@ export default function RetirementCalculator() {
                    <Calendar size={16} className="text-gray-400"/>
                    <p className="text-xs font-extrabold text-gray-500 uppercase tracking-widest">Future Monthly Need (in {targetYear})</p>
                 </div>
-                <p className="text-4xl font-black text-gray-900 dark:text-white mt-2">
+                <p className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white mt-2">
                   ₹{result.future_monthly_expense.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </p>
                 <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700">
@@ -306,7 +306,7 @@ export default function RetirementCalculator() {
                   By routing this specific SIP intelligently, you secure massive, immediate tax benefits this financial year.
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="bg-white/5 backdrop-blur-sm p-5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
                     <p className="text-xs text-indigo-300 uppercase font-extrabold tracking-widest">NPS (Sec 80CCD(1B))</p>
                     <p className="text-3xl font-black text-emerald-400 mt-2">Save ₹{result.tax_savings_nps_80ccd.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>

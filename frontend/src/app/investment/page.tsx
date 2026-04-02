@@ -116,16 +116,16 @@ export default function InvestmentPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">Investment Planner</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">Investment Planner</h1>
           <p className="mt-2 text-gray-500 dark:text-gray-400">Goal-based investment planning with risk profiling</p>
         </div>
 
         {/* Step indicator */}
-        <div className="flex items-center justify-center gap-2 mb-8">
+        <div className="flex items-center justify-center gap-1 sm:gap-2 mb-8 flex-wrap">
           {[{ n: 1, label: "Goal", icon: Target }, { n: 2, label: "Risk Profile", icon: Brain }, { n: 3, label: "Your Plan", icon: TrendingUp }].map(({ n, label, icon: Icon }) => (
-            <div key={n} className="flex items-center gap-2">
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${step >= n ? "bg-indigo-600 text-white" : "bg-gray-100 dark:bg-slate-800 text-gray-400"}`}>
-                <Icon size={12} />{label}
+            <div key={n} className="flex items-center gap-1 sm:gap-2">
+              <div className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-bold transition-all ${step >= n ? "bg-indigo-600 text-white" : "bg-gray-100 dark:bg-slate-800 text-gray-400"}`}>
+                <Icon size={12} /><span className="hidden xs:inline">{label}</span>
               </div>
               {n < 3 && <ChevronRight size={14} className="text-gray-300 dark:text-gray-600" />}
             </div>
@@ -264,7 +264,7 @@ export default function InvestmentPage() {
             })()}
 
             {/* SIP + Tax */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { label: "Recommended SIP", value: `₹${plan.monthly_sip.toLocaleString('en-IN')}`, sub: "per month" },
                 { label: "80C Tax Benefit", value: `₹${Math.round(plan.tax_benefit_80c).toLocaleString('en-IN')}`, sub: "per year (ELSS)" },
@@ -281,8 +281,8 @@ export default function InvestmentPage() {
             {/* Asset Mix donut */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 p-5">
               <p className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Asset Allocation</p>
-              <div className="flex items-center gap-6">
-                <div className="w-40 h-40 flex-shrink-0">
+              <div className="flex flex-col sm:flex-row items-center gap-6">
+                <div className="w-36 h-36 flex-shrink-0">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={Object.entries(plan.asset_mix).map(([k, v]) => ({ name: k.replace('_', ' '), value: Math.round(v * 100) }))} cx="50%" cy="50%" innerRadius="55%" outerRadius="85%" dataKey="value" stroke="none">

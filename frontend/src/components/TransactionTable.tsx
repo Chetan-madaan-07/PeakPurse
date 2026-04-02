@@ -25,7 +25,7 @@ export default function TransactionTable({ transactions }: TableProps) {
       </div>
       
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse whitespace-nowrap">
+        <table className="w-full text-left border-collapse min-w-[500px]">
           <thead>
             <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider border-b border-gray-100 dark:border-slate-800">
               <th className="px-6 py-4 font-semibold">Date</th>
