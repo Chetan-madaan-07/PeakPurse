@@ -55,7 +55,7 @@ export default function TaxPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">Tax Assistant</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">Tax Assistant</h1>
           <p className="mt-2 text-gray-500 dark:text-gray-400">Old vs New regime comparison with deduction discovery</p>
         </div>
 
@@ -100,7 +100,7 @@ export default function TaxPage() {
         {comparison && (
           <div className="space-y-5">
             {/* Regime comparison */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { label: "Old Regime", tax: comparison.tax_old_regime, recommended: comparison.recommended_regime === 'old' },
                 { label: "New Regime", tax: comparison.tax_new_regime, recommended: comparison.recommended_regime === 'new' },

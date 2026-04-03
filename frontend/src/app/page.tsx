@@ -45,13 +45,13 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-slate-950 py-12 px-4 sm:px-6 lg:px-8 font-sans selection:bg-indigo-200">
+    <main className="min-h-screen bg-gray-50 dark:bg-slate-950 py-8 px-4 sm:px-6 lg:px-8 font-sans selection:bg-indigo-200">
       <div className="max-w-7xl mx-auto">
         {transactions.length === 0 ? (
           <div className="space-y-0">
             <Hero onGetStarted={scrollToUpload} />
             
-            <div ref={uploadRef} className="py-20 animate-fade-in-up">
+            <div ref={uploadRef} className="py-12 md:py-20 animate-fade-in-up">
               <div className="max-w-2xl mx-auto px-4">
                 <div className="text-center mb-10">
                   <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">Upload Your Statement</h2>
@@ -65,7 +65,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-12 animate-fade-in-down transition-all duration-700">
-            <div className="flex flex-col md:flex-row justify-between items-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-md p-6 rounded-2xl border border-white/20 dark:border-slate-800 shadow-soft mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-white/20 dark:border-slate-800 shadow-soft mb-8 gap-3">
               <div>
                 <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-fuchsia-600">Analysis Workspace</h1>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Viewing report for: <span className="font-bold text-gray-700 dark:text-gray-200">{uploadedPdf?.name}</span></p>
@@ -75,7 +75,7 @@ export default function Home() {
                   setTransactions([]);
                   setUploadedPdf(null);
                 }}
-                className="mt-4 md:mt-0 px-6 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-bold rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-all text-xs uppercase tracking-widest"
+                className="px-6 py-2 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-bold rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-all text-xs uppercase tracking-widest self-start sm:self-auto"
               >
                 Scan New File
               </button>

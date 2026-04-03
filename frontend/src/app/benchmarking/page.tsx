@@ -50,7 +50,7 @@ export default function BenchmarkingPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 pt-20 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">
             Social Benchmarking
           </h1>
           <p className="mt-2 text-gray-500 dark:text-gray-400">See how your finances compare with peers</p>
@@ -72,7 +72,7 @@ export default function BenchmarkingPage() {
             {/* Hero Banner */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-8 text-center">
               <p className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">Your Financial Health Score</p>
-              <div className={`text-7xl font-extrabold ${ScoreColor(data.userProfile.score)}`}>
+              <div className={`text-6xl sm:text-7xl font-extrabold ${ScoreColor(data.userProfile.score)}`}>
                 {data.userProfile.score}
               </div>
               <div className="mt-2 text-sm text-gray-400">out of 100</div>
@@ -92,7 +92,7 @@ export default function BenchmarkingPage() {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-sm min-w-[480px]">
                   <thead>
                     <tr className="bg-gray-50 dark:bg-slate-800/50 text-gray-400 dark:text-gray-500 text-xs uppercase tracking-wider">
                       <th className="px-6 py-3 text-left font-semibold">Rank</th>

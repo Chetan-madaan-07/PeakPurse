@@ -10,10 +10,21 @@
     @apply font-sans antialiased;
     margin: 0;
     padding: 0;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
+  }
+
+  /* Improve tap targets on mobile */
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-/* You can also add custom animations here if you want that GenZ feel */
 @layer utilities {
   .animate-fade-in-up {
     animation: fadeInUp 0.5s ease-out forwards;
@@ -28,5 +39,15 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* Safe area padding for notched phones */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 1rem);
+  }
+
+  /* Prevent text overflow on mobile */
+  .text-balance {
+    text-wrap: balance;
   }
 }

@@ -104,7 +104,7 @@ export default function SubscriptionsPage() {
       <div className="max-w-3xl mx-auto">
 
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600">
             Subscription Tracker
           </h1>
           <p className="mt-2 text-gray-500 dark:text-gray-400">Track and manage your recurring payments</p>
