@@ -5,6 +5,7 @@ FastAPI service for financial health scoring, transaction categorization,
 and personalized recommendations.
 """
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -26,6 +27,39 @@ from datetime import datetime
 setup_logging()
 logger = structlog.get_logger()
 
+
+# --- MODERN STARTUP / SHUTDOWN LOGIC ---
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize and cleanup the ML service."""
+    logger.info("Starting PeakPurse ML Service", version="1.0.0")
+    
+    # Load ML models
+    try:
+        # Initialize models here (Your LayoutLM and others remain untouched)
+        logger.info("ML models loaded successfully")
+        
+        # Initialize Gemini for the Chatbot
+        api_key = os.getenv("GEMINI_API_KEY") or getattr(settings, 'GEMINI_API_KEY', None)
+        if api_key:
+            client = genai.Client(api_key=api_key)
+            app.state.gemini_client = client
+            app.state.gemini_model = "gemini-1.5-flash"
+            logger.info("Gemini 1.5 Flash initialized successfully for Chatbot")
+        else:
+            logger.warning("GEMINI_API_KEY not found! Chatbot will not function until key is provided.")
+            
+    except Exception as e:
+        logger.error("Failed to load ML models or initialize Gemini", error=str(e))
+        raise
+
+    # The server runs while paused right here!
+    yield 
+
+    # --- SHUTDOWN LOGIC ---
+    logger.info("Shutting down PeakPurse ML Service")
+
+
 # Create FastAPI application
 app = FastAPI(
     title="PeakPurse ML Service",
@@ -34,7 +68,8 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
-    swagger_ui_parameters={"deepLinking": False}
+    swagger_ui_parameters={"deepLinking": False},
+    lifespan=lifespan  # <--- Telling FastAPI to use the modern startup logic
 )
 
 @app.get("/ping", tags=["Health"])
@@ -86,44 +121,13 @@ app.include_router(
     dependencies=[Depends(verify_internal_request)],
 )
 
-# NEW: Include Chatbot router
+# Include Chatbot router
 app.include_router(
     chatbot.router,
     prefix="/internal/ml",
     tags=["chatbot"],
     dependencies=[Depends(verify_internal_request)],
 )
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize the ML service."""
-    logger.info("Starting PeakPurse ML Service", version="1.0.0")
-    
-    # Load ML models
-    try:
-        # Initialize models here (Your LayoutLM and others remain untouched)
-        logger.info("ML models loaded successfully")
-        
-        # NEW: Initialize Gemini for the Chatbot
-        api_key = os.getenv("GEMINI_API_KEY") or getattr(settings, 'GEMINI_API_KEY', None)
-        if api_key:
-            client = genai.Client(api_key=api_key)
-            app.state.gemini_client = client
-            app.state.gemini_model = "gemini-1.5-flash"
-            logger.info("Gemini 1.5 Flash initialized successfully for Chatbot")
-        else:
-            logger.warning("GEMINI_API_KEY not found! Chatbot will not function until key is provided.")
-            
-    except Exception as e:
-        logger.error("Failed to load ML models or initialize Gemini", error=str(e))
-        raise
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup resources."""
-    logger.info("Shutting down PeakPurse ML Service")
 
 
 @app.get("/")
@@ -143,7 +147,7 @@ async def root():
             "categorizer_health": "/internal/ml/categorizer/health",
             "health_score": "/internal/ml/health-score",
             "recommendations": "/internal/ml/recommendations",
-            "chatbot": "/internal/ml/chat" # NEW
+            "chatbot": "/internal/ml/chat"
         },
         "authentication": {
             "method": "X-Internal-Secret header",
@@ -184,14 +188,13 @@ async def health_check(request: Request):
         "status": "healthy",
         "service": "peakpurse-ml-service",
         "version": "1.0.0",
-        "gemini_status": "initialized" if hasattr(request.app.state, "gemini_model") else "offline" # NEW
+        "gemini_status": "initialized" if hasattr(request.app.state, "gemini_model") else "offline"
     }
 
 
 if __name__ == "__main__":
-    # Render provides a PORT environment variable; fallback to 8000 for local dev
-    import os
-    port = int(os.environ.get("PORT", 8000))
+    # Render requires binding to 0.0.0.0 and dynamically pulling the PORT variable
+    port = int(os.environ.get("PORT", 10000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
