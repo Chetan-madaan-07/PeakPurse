@@ -22,17 +22,6 @@ from src.core.exceptions import setup_exception_handlers
 from src.core.security import verify_internal_request
 from datetime import datetime
 
-
-@app.get("/ping", tags=["Health"])
-async def keep_alive_ping():
-    """Endpoint for UptimeRobot and Internal Triggers to keep the server awake."""
-    return {
-        "status": "ok",
-        "service": "PeakPurse ML Service",
-        "timestamp": datetime.utcnow().isoformat(),
-        "message": "I am awake!"
-    }
-
 # Setup structured logging
 setup_logging()
 logger = structlog.get_logger()
@@ -47,6 +36,16 @@ app = FastAPI(
     openapi_url="/openapi.json",
     swagger_ui_parameters={"deepLinking": False}
 )
+
+@app.get("/ping", tags=["Health"])
+async def keep_alive_ping():
+    """Endpoint for UptimeRobot and Internal Triggers to keep the server awake."""
+    return {
+        "status": "ok",
+        "service": "PeakPurse ML Service",
+        "timestamp": datetime.utcnow().isoformat(),
+        "message": "I am awake!"
+    }
 
 # Add static files for serving missing assets
 if os.path.exists("static"):

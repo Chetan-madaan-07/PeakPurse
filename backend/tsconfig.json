@@ -9,7 +9,7 @@
     "target": "ES2020",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "rootDir": "./src",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -18,17 +18,17 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@/*": ["src/*"],
-      "@/auth/*": ["src/auth/*"],
-      "@/finance/*": ["src/finance/*"],
-      "@/tax/*": ["src/tax/*"],
-      "@/ca/*": ["src/ca/*"],
-      "@/benchmarking/*": ["src/benchmarking/*"],
-      "@/chatbot/*": ["src/chatbot/*"],
-      "@/investment/*": ["src/investment/*"],
-      "@/notification/*": ["src/notification/*"],
-      "@/audit/*": ["src/audit/*"],
-      "@/common/*": ["src/common/*"]
+      "@/*": ["./src/*"],
+      "@/auth/*": ["./src/auth/*"],
+      "@/finance/*": ["./src/finance/*"],
+      "@/tax/*": ["./src/tax/*"],
+      "@/ca/*": ["./src/ca/*"],
+      "@/benchmarking/*": ["./src/benchmarking/*"],
+      "@/chatbot/*": ["./src/chatbot/*"],
+      "@/investment/*": ["./src/investment/*"],
+      "@/notification/*": ["./src/notification/*"],
+      "@/audit/*": ["./src/audit/*"],
+      "@/common/*": ["./src/common/*"]
     }
   },
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
