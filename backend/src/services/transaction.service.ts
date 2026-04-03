@@ -66,7 +66,7 @@ export class TransactionService {
 
         this.logger.debug(`Transaction saved: ${savedTx.hash}`);
 
-      } catch (error) {
+      } catch (error: any) { // <--- FIXED ERROR TYPING HERE
         const errorMsg = `Failed to process transaction ${mlTx.transaction_hash}: ${error.message}`;
         result.errors.push(errorMsg);
         this.logger.error(errorMsg);
@@ -267,7 +267,7 @@ export class TransactionService {
    * Phase 3: Calculate average monthly surplus (Income - Expenses)
    * Strictly handles the zero-transaction edge case for the Investment Advisory System.
    */
-  async calculateMonthlySurplus(): Promise<{ surplus: number; hasHistory: boolean }> {
+  async calculateMonthlySurplus(): Promise<{ surplus: number; hasHistory: boolean; average_income?: number; average_expenses?: number }> {
     // 1. Check if we have ANY transaction data at all 
     const count = await this.transactionRepository.count();
     
@@ -304,7 +304,62 @@ export class TransactionService {
 
     return {
       surplus: Math.round(surplus * 100) / 100, // Round to 2 decimal places 
-      hasHistory: true
+      hasHistory: true,
+      average_income: avgMonthlyIncome,
+      average_expenses: avgMonthlyExpense
     };
+  }
+
+  // --- FINANCIAL HEALTH SCORE ENGINE ---
+  async generateFinancialHealthScore(): Promise<{ score: number, status: string, details: string }> {
+    try {
+      // 1. Grab the user's monthly income and expenses using the surplus calculator
+      const surplusData = await this.calculateMonthlySurplus(); 
+
+      // 2. Default baseline score
+      let score = 50; 
+      let status = "Fair";
+      let details = "Not enough transaction history to calculate a highly accurate score yet.";
+
+      if (surplusData && surplusData.hasHistory) {
+        const income = surplusData.average_income || 0;
+        const expenses = surplusData.average_expenses || 0;
+        const surplus = surplusData.surplus || 0;
+
+        if (income > 0) {
+          // Calculate Savings Rate (The golden rule of financial health)
+          const savingsRate = (surplus / income) * 100;
+
+          if (savingsRate >= 30) { 
+            score = 95; 
+            status = "Excellent"; 
+            details = `Outstanding! You are saving ${savingsRate.toFixed(1)}% of your income.`;
+          }
+          else if (savingsRate >= 15) { 
+            score = 80; 
+            status = "Good"; 
+            details = `Solid financial habits. You are saving ${savingsRate.toFixed(1)}% of your income.`;
+          }
+          else if (savingsRate > 0) { 
+            score = 60; 
+            status = "Fair"; 
+            details = `You are living within your means, but your savings rate (${savingsRate.toFixed(1)}%) could be optimized.`;
+          }
+          else { 
+            score = 35; 
+            status = "Needs Attention"; 
+            details = "Your monthly expenses are currently exceeding your income. Let's look for optimization areas.";
+          }
+        }
+      }
+
+      // In the future, you can save this score to a 'UserHealth' database table here!
+
+      return { score, status, details };
+
+    } catch (error: any) { // <--- FIXED ERROR TYPING HERE
+      this.logger.error('Failed to generate health score', error.message);
+      return { score: 0, status: "Error", details: "Calculation failed" };
+    }
   }
 }

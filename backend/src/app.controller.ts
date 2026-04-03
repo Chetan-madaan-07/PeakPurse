@@ -25,7 +25,7 @@ export class AppController {
         const mlUrl = process.env.ML_SERVICE_URL || 'https://peakpurse-ml-service.onrender.com';
         await axios.get(`${mlUrl}/ping`);
         this.logger.log(`Keep-Alive: Successfully poked ML Service at ${mlUrl}`);
-      } catch (error) {
+      } catch (error: any) { // <--- ADDED : any HERE
         this.logger.warn('Keep-Alive: Failed to poke ML Service. Is it down?');
       }
     }, 2 * 60 * 1000); // 2 minutes
@@ -107,7 +107,7 @@ export class AppController {
           healthScore = await this.transactionService.generateFinancialHealthScore();
           this.logger.log(`Health Score generated: ${healthScore.score}/100`);
 
-        } catch (dbErr) {
+        } catch (dbErr: any) { // <--- ADDED : any HERE
           this.logger.warn('DB save or Health Score failed (non-fatal)', dbErr.message);
         }
       }
@@ -125,7 +125,7 @@ export class AppController {
           processing_time: mlResponse?.data?.metadata?.processing_time || 0,
         },
       };
-    } catch (error) {
+    } catch (error: any) { // <--- ADDED : any HERE
       this.logger.error('Upload failed', error.message);
       throw new InternalServerErrorException(`Failed to process file: ${error.message}`);
     }
