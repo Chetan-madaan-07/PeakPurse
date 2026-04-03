@@ -20,6 +20,18 @@ from src.core.config import settings
 from src.core.logging import setup_logging
 from src.core.exceptions import setup_exception_handlers
 from src.core.security import verify_internal_request
+from datetime import datetime
+
+
+@app.get("/ping", tags=["Health"])
+async def keep_alive_ping():
+    """Endpoint for UptimeRobot and Internal Triggers to keep the server awake."""
+    return {
+        "status": "ok",
+        "service": "PeakPurse ML Service",
+        "timestamp": datetime.utcnow().isoformat(),
+        "message": "I am awake!"
+    }
 
 # Setup structured logging
 setup_logging()
