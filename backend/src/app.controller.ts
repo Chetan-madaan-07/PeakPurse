@@ -1,8 +1,9 @@
-import { Controller, Post, UseInterceptors, UploadedFile, Body, BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
+import { Controller, Post, Get, UseInterceptors, UploadedFile, Body, BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as multer from 'multer';
+import axios from 'axios';
 import { Transaction } from './transaction.entity';
 import { FileUploadService } from './services/file-upload.service';
 import { TransactionService } from './services/transaction.service';
@@ -16,7 +17,30 @@ export class AppController {
     private transactionRepository: Repository<Transaction>,
     private readonly fileUploadService: FileUploadService,
     private readonly transactionService: TransactionService,
-  ) {}
+  ) {
+    // --- INTERNAL KEEP-ALIVE TRIGGER ---
+    // Automatically pokes the ML service every 2 minutes to keep it lightning fast!
+    setInterval(async () => {
+      try {
+        const mlUrl = process.env.ML_SERVICE_URL || 'https://peakpurse-ml-service.onrender.com';
+        await axios.get(`${mlUrl}/ping`);
+        this.logger.log(`Keep-Alive: Successfully poked ML Service at ${mlUrl}`);
+      } catch (error) {
+        this.logger.warn('Keep-Alive: Failed to poke ML Service. Is it down?');
+      }
+    }, 2 * 60 * 1000); // 2 minutes
+  }
+
+  // --- UPTIMEROBOT PING ENDPOINT ---
+  @Get('ping')
+  keepAlivePing() {
+    return {
+      status: 'ok',
+      service: 'PeakPurse Backend',
+      timestamp: new Date().toISOString(),
+      message: 'I am awake!'
+    };
+  }
 
   // Main upload route — delegates to ML service for real extraction
   @Post('upload')
@@ -47,8 +71,9 @@ export class AppController {
       );
 
       const transactions = mlResponse?.data?.transactions || [];
+      let healthScore = null;
 
-      // Best-effort DB save
+      // Best-effort DB save & Health Score Trigger
       if (transactions.length > 0) {
         try {
           const wrapped = {
@@ -74,9 +99,16 @@ export class AppController {
               metadata: mlResponse.data.metadata,
             },
           } as any;
+          
+          // 1. Save the transactions to DB
           await this.transactionService.processMLResponse(wrapped);
+
+          // 2. BOOM! Trigger the brand new Financial Health Score calculation
+          healthScore = await this.transactionService.generateFinancialHealthScore();
+          this.logger.log(`Health Score generated: ${healthScore.score}/100`);
+
         } catch (dbErr) {
-          this.logger.warn('DB save failed (non-fatal)', dbErr.message);
+          this.logger.warn('DB save or Health Score failed (non-fatal)', dbErr.message);
         }
       }
 
@@ -89,6 +121,7 @@ export class AppController {
           filename: file.originalname,
           size: file.size,
           transactions,
+          health_score: healthScore, // Sending the score directly to the frontend!
           processing_time: mlResponse?.data?.metadata?.processing_time || 0,
         },
       };
